@@ -1,0 +1,1 @@
+# PrismQ.IdeaInspiration.Model
