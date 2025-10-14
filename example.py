@@ -119,12 +119,7 @@ def example_from_audio():
         description="Discussion about the current state of AI",
         transcription="Welcome to the PrismQ Podcast. Today we're discussing artificial intelligence in 2025...",
         keywords=["podcast", "AI", "technology", "2025"],
-        metadata={
-            "duration": "3600",
-            "host": "John Doe",
-            "guest": "Dr. Jane Smith",
-            "episode": "15",
-        },
+        metadata={"duration": "3600", "host": "John Doe", "guest": "Dr. Jane Smith", "episode": "15"},
         source_id="podcast-ep15",
     )
 
@@ -183,7 +178,7 @@ def example_metadata_best_practices():
             "category": "machine-learning",
             "platform": "medium",
             "language": "en",
-        },
+        }
     )
 
     print("Text Metadata Example:")
@@ -204,7 +199,7 @@ def example_metadata_best_practices():
             "upload_date": "2025-01-10",
             "resolution": "1080p",
             "language": "en",
-        },
+        }
     )
 
     print("\nVideo Metadata Example:")
@@ -225,7 +220,7 @@ def example_metadata_best_practices():
             "format": "mp3",
             "bitrate": "128kbps",
             "language": "en",
-        },
+        }
     )
 
     print("\nAudio Metadata Example:")

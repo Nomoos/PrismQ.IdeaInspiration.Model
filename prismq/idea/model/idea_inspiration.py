@@ -44,10 +44,12 @@ class IdeaInspiration:
         source_url: Optional URL to the original content
         score: Optional numerical score value for the content
         category: Optional category classification for the content
-        performance_multipliers: Category-specific performance multipliers
-                                (e.g., {'US': 250, 'woman': 150})
-        content_strengths: Content flavor strength ratings 0-100
-                          (e.g., {'tech': 85, 'business': 60})
+        score_detail: Audience fit scores showing how well content fits different 
+                      audiences (e.g., {'woman': 65, 'man': 30, '10-15': 150, 
+                      '15-20': 89, 'us': 65, 'english': 110, 'spanish': 45})
+        category_flags: Secondary category tags with strength scores indicating 
+                        how strongly content aligns with each category 
+                        (e.g., {'Scary': 100, 'Action': 75, 'Drama': 60})
 
     Example:
         >>> idea = IdeaInspiration(
@@ -69,8 +71,8 @@ class IdeaInspiration:
     source_url: Optional[str] = None
     score: Optional[int] = None
     category: Optional[str] = None
-    performance_multipliers: Dict[str, int] = field(default_factory=dict)
-    content_strengths: Dict[str, int] = field(default_factory=dict)
+    score_detail: Dict[str, int] = field(default_factory=dict)
+    category_flags: Dict[str, int] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert IdeaInspiration to dictionary representation.
@@ -113,8 +115,8 @@ class IdeaInspiration:
             source_url=data.get("source_url"),
             score=data.get("score"),
             category=data.get("category"),
-            performance_multipliers=data.get("performance_multipliers", {}),
-            content_strengths=data.get("content_strengths", {}),
+            score_detail=data.get("score_detail", {}),
+            category_flags=data.get("category_flags", {}),
         )
 
     @classmethod
@@ -129,8 +131,8 @@ class IdeaInspiration:
         source_url: Optional[str] = None,
         score: Optional[int] = None,
         category: Optional[str] = None,
-        performance_multipliers: Optional[Dict[str, int]] = None,
-        content_strengths: Optional[Dict[str, int]] = None,
+        score_detail: Optional[Dict[str, int]] = None,
+        category_flags: Optional[Dict[str, int]] = None,
     ) -> "IdeaInspiration":
         """Create IdeaInspiration from text content.
 
@@ -144,8 +146,8 @@ class IdeaInspiration:
             source_url: Optional source URL
             score: Optional numerical score value
             category: Optional category classification
-            performance_multipliers: Optional category-specific performance multipliers
-            content_strengths: Optional content flavor strength ratings (0-100)
+            score_detail: Optional audience fit scores (e.g., demographics, age groups, regions)
+            category_flags: Optional secondary category tags with strength scores (0-100)
 
         Returns:
             IdeaInspiration instance with ContentType.TEXT
@@ -161,8 +163,8 @@ class IdeaInspiration:
             source_url=source_url,
             score=score,
             category=category,
-            performance_multipliers=performance_multipliers or {},
-            content_strengths=content_strengths or {},
+            score_detail=score_detail or {},
+            category_flags=category_flags or {},
         )
 
     @classmethod
@@ -177,8 +179,8 @@ class IdeaInspiration:
         source_url: Optional[str] = None,
         score: Optional[int] = None,
         category: Optional[str] = None,
-        performance_multipliers: Optional[Dict[str, int]] = None,
-        content_strengths: Optional[Dict[str, int]] = None,
+        score_detail: Optional[Dict[str, int]] = None,
+        category_flags: Optional[Dict[str, int]] = None,
     ) -> "IdeaInspiration":
         """Create IdeaInspiration from video content with subtitles.
 
@@ -193,8 +195,8 @@ class IdeaInspiration:
             source_url: Optional video URL
             score: Optional numerical score value
             category: Optional category classification
-            performance_multipliers: Optional category-specific performance multipliers
-            content_strengths: Optional content flavor strength ratings (0-100)
+            score_detail: Optional audience fit scores (e.g., demographics, age groups, regions)
+            category_flags: Optional secondary category tags with strength scores (0-100)
 
         Returns:
             IdeaInspiration instance with ContentType.VIDEO
@@ -210,8 +212,8 @@ class IdeaInspiration:
             source_url=source_url,
             score=score,
             category=category,
-            performance_multipliers=performance_multipliers or {},
-            content_strengths=content_strengths or {},
+            score_detail=score_detail or {},
+            category_flags=category_flags or {},
         )
 
     @classmethod
@@ -226,8 +228,8 @@ class IdeaInspiration:
         source_url: Optional[str] = None,
         score: Optional[int] = None,
         category: Optional[str] = None,
-        performance_multipliers: Optional[Dict[str, int]] = None,
-        content_strengths: Optional[Dict[str, int]] = None,
+        score_detail: Optional[Dict[str, int]] = None,
+        category_flags: Optional[Dict[str, int]] = None,
     ) -> "IdeaInspiration":
         """Create IdeaInspiration from audio content with transcription.
 
@@ -242,8 +244,8 @@ class IdeaInspiration:
             source_url: Optional audio URL
             score: Optional numerical score value
             category: Optional category classification
-            performance_multipliers: Optional category-specific performance multipliers
-            content_strengths: Optional content flavor strength ratings (0-100)
+            score_detail: Optional audience fit scores (e.g., demographics, age groups, regions)
+            category_flags: Optional secondary category tags with strength scores (0-100)
 
         Returns:
             IdeaInspiration instance with ContentType.AUDIO
@@ -259,8 +261,8 @@ class IdeaInspiration:
             source_url=source_url,
             score=score,
             category=category,
-            performance_multipliers=performance_multipliers or {},
-            content_strengths=content_strengths or {},
+            score_detail=score_detail or {},
+            category_flags=category_flags or {},
         )
 
     def __repr__(self) -> str:

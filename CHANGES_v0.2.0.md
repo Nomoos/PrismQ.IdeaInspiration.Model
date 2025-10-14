@@ -16,20 +16,21 @@ This release adds comprehensive scoring and categorization capabilities to the I
 - Optional field, defaults to `None`
 - Example: `category="technology"`
 
-### 3. Performance Multipliers (`Dict[str, int]`)
-- Category-specific performance multipliers showing performance percentages
-- Indicates how content performs vs. industry standard/baseline
+### 3. Score Detail (`Dict[str, int]`)
+- Audience fit scores showing how well content fits different audiences
+- Used in score calculation by the Builder module
 - Empty dict by default
 - Example use cases:
-  - Market performance: `{"US": 250, "Europe": 180}` (250% performance in US vs standard)
-  - Demographic performance: `{"woman": 150, "man": 140}` (150% performance with women demographic)
-  - Category performance: `{"tech": 180, "startup": 200}` (180% performance in tech category)
+  - Demographics: `{"woman": 65, "man": 30}`
+  - Age groups: `{"10-15": 150, "15-20": 89}`
+  - Regions: `{"us": 65, "europe": 75}`
+  - Languages: `{"english": 110, "spanish": 45}`
 
-### 4. Content Strengths (`Dict[str, int]`)
-- Content flavor strength ratings on 0-100 scale
-- Indicates how strongly content aligns with specific themes/categories
+### 4. Category Flags (`Dict[str, int]`)
+- Secondary category tags with strength scores (0-100)
+- Indicates how strongly content aligns with each category
 - Empty dict by default
-- Example: `{"innovation": 95, "technology": 88, "education": 70}`
+- Example: `{"Scary": 100, "Action": 75, "Drama": 60}`
 
 ## API Changes
 
@@ -63,17 +64,17 @@ class IdeaInspiration:
     source_url: Optional[str] = None
     score: Optional[int] = None  # NEW
     category: Optional[str] = None  # NEW
-    performance_multipliers: Dict[str, int] = field(default_factory=dict)  # NEW
-    content_strengths: Dict[str, int] = field(default_factory=dict)  # NEW
+    score_detail: Dict[str, int] = field(default_factory=dict)  # NEW
+    category_flags: Dict[str, int] = field(default_factory=dict)  # NEW
 ```
 
 ### Factory Method Updates
 
 All factory methods now support the new fields:
 
-- `IdeaInspiration.from_text()` - Added `score`, `category`, `performance_multipliers`, `content_strengths` parameters
-- `IdeaInspiration.from_video()` - Added `score`, `category`, `performance_multipliers`, `content_strengths` parameters
-- `IdeaInspiration.from_audio()` - Added `score`, `category`, `performance_multipliers`, `content_strengths` parameters
+- `IdeaInspiration.from_text()` - Added `score`, `category`, `score_detail`, `category_flags` parameters
+- `IdeaInspiration.from_video()` - Added `score`, `category`, `score_detail`, `category_flags` parameters
+- `IdeaInspiration.from_audio()` - Added `score`, `category`, `score_detail`, `category_flags` parameters
 
 ### Serialization Updates
 
@@ -92,32 +93,34 @@ idea = IdeaInspiration.from_text(
 )
 ```
 
-### Performance Multipliers - Market Performance
+### Score Detail - Audience Fit
 ```python
 idea = IdeaInspiration.from_video(
     title="Tech Startup Success Stories",
     subtitle_text="Learn from entrepreneurs...",
     score=90,
     category="business",
-    performance_multipliers={
-        "US": 250,      # 250% vs standard in US market
-        "Europe": 180,  # 180% vs standard in Europe
-        "woman": 150,   # 150% performance with women
+    score_detail={
+        "woman": 65,      # Audience fit for women
+        "man": 30,        # Audience fit for men
+        "10-15": 150,     # Audience fit for age 10-15
+        "us": 65,         # Audience fit for US region
+        "english": 110,   # Audience fit for English speakers
     }
 )
 ```
 
-### Content Strengths - Content Flavor
+### Category Flags - Secondary Categories
 ```python
 idea = IdeaInspiration.from_audio(
-    title="Healthcare Innovation Podcast",
-    transcription="Breakthrough technologies...",
+    title="Horror Story Podcast",
+    transcription="A dark tale unfolds...",
     score=88,
-    category="healthcare",
-    content_strengths={
-        "innovation": 95,   # Very strong innovation flavor
-        "technology": 88,   # Strong technology flavor
-        "healthcare": 92,   # Very strong healthcare flavor
+    category="Horror",
+    category_flags={
+        "Scary": 100,     # Fully scary content
+        "Suspense": 90,   # Very strong suspense
+        "Drama": 60,      # Moderate drama elements
     }
 )
 ```
@@ -196,8 +199,8 @@ idea = IdeaInspiration.from_text(
     text_content="Content...",
     score=85,
     category="technology",
-    performance_multipliers={"US": 250},
-    content_strengths={"innovation": 90}
+    score_detail={"US": 250},
+    category_flags={"innovation": 90}
 )
 ```
 

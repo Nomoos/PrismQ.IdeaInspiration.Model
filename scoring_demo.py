@@ -29,8 +29,8 @@ def main():
     print(f"Category: {idea1.category}")
     print()
 
-    # Example 2: Performance multipliers with market data
-    print("Example 2: Performance Multipliers - Market Performance")
+    # Example 2: Score detail with market multipliers
+    print("Example 2: Score Detail - Market Performance Multipliers")
     print("-" * 70)
     idea2 = IdeaInspiration.from_video(
         title="Tech Startup Success Stories",
@@ -38,7 +38,7 @@ def main():
         keywords=["startup", "business", "entrepreneur"],
         score=90,
         category="business",
-        performance_multipliers={
+        score_detail={
             "US": 250,  # 250% vs industry standard in US market
             "Europe": 180,  # 180% vs industry standard in Europe
             "Asia": 220,  # 220% vs industry standard in Asia
@@ -49,12 +49,12 @@ def main():
     print(f"Title: {idea2.title}")
     print(f"Overall Score: {idea2.score}")
     print("Market Performance Multipliers:")
-    for market, multiplier in idea2.performance_multipliers.items():
+    for market, multiplier in idea2.score_detail.items():
         print(f"  {market}: {multiplier}% vs standard")
     print()
 
-    # Example 3: Content strengths with flavor ratings
-    print("Example 3: Content Strengths - Content Flavor Ratings")
+    # Example 3: Category flags with flavor strength
+    print("Example 3: Category Flags - Content Flavor Strength")
     print("-" * 70)
     idea3 = IdeaInspiration.from_audio(
         title="Healthcare Innovation Podcast",
@@ -62,7 +62,7 @@ def main():
         keywords=["healthcare", "innovation", "technology"],
         score=88,
         category="healthcare",
-        content_strengths={
+        category_flags={
             "innovation": 95,  # Very strong innovation flavor
             "technology": 88,  # Strong technology flavor
             "healthcare": 92,  # Very strong healthcare flavor
@@ -73,7 +73,7 @@ def main():
     print(f"Title: {idea3.title}")
     print(f"Category: {idea3.category}")
     print("Content Flavor Strengths (0-100 scale):")
-    for flavor, strength in idea3.content_strengths.items():
+    for flavor, strength in idea3.category_flags.items():
         bar = "█" * (strength // 5)  # Visual bar representation
         print(f"  {flavor:15s}: {strength:3d}/100 {bar}")
     print()
@@ -88,13 +88,13 @@ def main():
         keywords=["AI", "climate", "sustainability", "innovation"],
         score=92,
         category="sustainability",
-        performance_multipliers={
+        score_detail={
             "US": 280,  # Exceptional US market performance
             "tech_industry": 300,  # Outstanding in tech sector
             "woman": 165,  # Strong appeal to women
             "millennial": 220,  # Strong millennial engagement
         },
-        content_strengths={
+        category_flags={
             "innovation": 98,  # Extremely innovative
             "sustainability": 95,  # Very strong sustainability focus
             "technology": 90,  # Strong tech component
@@ -107,15 +107,11 @@ def main():
     print(f"Overall Score: {idea4.score}/100")
     print()
     print("Performance Multipliers:")
-    for segment, multiplier in sorted(
-        idea4.performance_multipliers.items(), key=lambda x: x[1], reverse=True
-    ):
+    for segment, multiplier in sorted(idea4.score_detail.items(), key=lambda x: x[1], reverse=True):
         print(f"  {segment:20s}: {multiplier}%")
     print()
     print("Content Flavors:")
-    for flavor, strength in sorted(
-        idea4.content_strengths.items(), key=lambda x: x[1], reverse=True
-    ):
+    for flavor, strength in sorted(idea4.category_flags.items(), key=lambda x: x[1], reverse=True):
         print(f"  {flavor:20s}: {strength}/100")
     print()
 
@@ -126,8 +122,8 @@ def main():
     print("Serialized to dictionary:")
     print(f"  Score: {data['score']}")
     print(f"  Category: {data['category']}")
-    print(f"  Performance Multipliers Keys: {list(data['performance_multipliers'].keys())}")
-    print(f"  Content Strengths Keys: {list(data['content_strengths'].keys())}")
+    print(f"  Score Detail Keys: {list(data['score_detail'].keys())}")
+    print(f"  Category Flags Keys: {list(data['category_flags'].keys())}")
     print()
 
     # Restore from dictionary
@@ -135,10 +131,8 @@ def main():
     print("Successfully restored from dictionary:")
     print(f"  Score matches: {restored.score == idea4.score}")
     print(f"  Category matches: {restored.category == idea4.category}")
-    print(
-        f"  Performance multipliers match: {restored.performance_multipliers == idea4.performance_multipliers}"
-    )
-    print(f"  Content strengths match: {restored.content_strengths == idea4.content_strengths}")
+    print(f"  Score detail matches: {restored.score_detail == idea4.score_detail}")
+    print(f"  Category flags match: {restored.category_flags == idea4.category_flags}")
     print()
 
     print("=" * 70)

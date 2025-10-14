@@ -131,29 +131,33 @@ idea = IdeaInspiration.from_text(
     text_content="Artificial intelligence is transforming healthcare...",
     keywords=["AI", "healthcare", "technology"],
     score=85,  # Overall score
-    category="technology",  # Category classification
-    performance_multipliers={
-        "US": 250,      # 250% performance vs standard for US market
-        "woman": 150,   # 150% performance for women demographic
-        "tech": 180     # 180% performance in tech category
+    category="technology",  # Primary category
+    score_detail={
+        "woman": 65,      # Audience fit for women
+        "man": 30,        # Audience fit for men
+        "10-15": 150,     # Audience fit for age 10-15
+        "15-20": 89,      # Audience fit for age 15-20
+        "us": 65,         # Audience fit for US region
+        "english": 110,   # Audience fit for English speakers
+        "spanish": 45     # Audience fit for Spanish speakers
     },
-    content_strengths={
-        "innovation": 95,  # Strong innovation flavor (0-100)
-        "healthcare": 88,  # Strong healthcare flavor
-        "AI": 92          # Strong AI flavor
+    category_flags={
+        "Scary": 100,     # Fully scary content
+        "Action": 75,     # Strong action elements
+        "Drama": 60       # Moderate drama elements
     }
 )
 
 # Access scoring fields
 print(f"Score: {idea.score}")
 print(f"Category: {idea.category}")
-print(f"US market multiplier: {idea.performance_multipliers['US']}%")
-print(f"Innovation strength: {idea.content_strengths['innovation']}/100")
+print(f"Women audience fit: {idea.score_detail['woman']}")
+print(f"Scary strength: {idea.category_flags['Scary']}/100")
 ```
 
-**Performance Multipliers**: Category-specific performance multipliers indicating performance percentages. For example, `{"US": 250}` means content performs 250% better in the US market compared to industry standard.
+**Score Detail**: Audience fit scores showing how well the content fits different audiences (demographics, age groups, regions, languages, etc.). These are used in score calculation by the Builder.
 
-**Content Strengths**: Flavor strength ratings on a 0-100 scale indicating how strongly the content aligns with specific categories or themes.
+**Category Flags**: Secondary category tags with strength scores (0-100) indicating how strongly the content aligns with each category.
 
 ## Data Model
 
@@ -172,9 +176,9 @@ The core data model with the following fields:
 | `source_id` | `Optional[str]` | Unique identifier from source platform |
 | `source_url` | `Optional[str]` | URL to original content |
 | `score` | `Optional[int]` | Numerical score value for content evaluation |
-| `category` | `Optional[str]` | Category classification for the content |
-| `performance_multipliers` | `Dict[str, int]` | Category-specific performance multipliers (e.g., `{'US': 250, 'woman': 150}`) - percentages for overperformers |
-| `content_strengths` | `Dict[str, int]` | Content flavor strength ratings 0-100 (e.g., `{'tech': 85, 'business': 60}`) |
+| `category` | `Optional[str]` | Primary category classification for the content |
+| `score_detail` | `Dict[str, int]` | Audience fit scores (e.g., `{'woman': 65, 'man': 30, '10-15': 150, 'us': 65, 'english': 110}`) |
+| `category_flags` | `Dict[str, int]` | Secondary category tags with strength scores 0-100 (e.g., `{'Scary': 100, 'Action': 75, 'Drama': 60}`) |
 
 ### ContentType
 
@@ -438,8 +442,6 @@ PrismQ.IdeaInspiration.Model/
 
 ## Version History
 
-- **v0.2.1** - Field naming improvements: `score_detail` → `performance_multipliers`, `category_flags` → `content_strengths`
-- **v0.2.0** - Added scoring and category fields for content evaluation
 - **v0.1.1** - SQLite/S3DB compatibility with `Dict[str, str]` metadata, comprehensive examples
 - **v0.1.0** - Initial release with core IdeaInspiration model
 
