@@ -293,13 +293,15 @@ class TestIdeaInspirationSQLiteCompatibility:
                 "views": "1000",  # numeric values as strings
                 "rating": "4.5",  # float values as strings
                 "category": "technology",
-            }
+            },
         )
-        
+
         # Verify all metadata values are strings
         for key, value in idea.metadata.items():
-            assert isinstance(value, str), f"Metadata value for '{key}' should be string, got {type(value)}"
-    
+            assert isinstance(
+                value, str
+            ), f"Metadata value for '{key}' should be string, got {type(value)}"
+
     def test_metadata_examples_for_different_sources(self):
         """Test metadata examples for text, video, and audio sources."""
         # Text metadata examples
@@ -311,10 +313,10 @@ class TestIdeaInspirationSQLiteCompatibility:
                 "word_count": "1500",
                 "reading_time": "7",
                 "platform": "medium",
-            }
+            },
         )
         assert text_idea.metadata["word_count"] == "1500"
-        
+
         # Video metadata examples
         video_idea = IdeaInspiration.from_video(
             title="Tutorial Video",
@@ -325,10 +327,10 @@ class TestIdeaInspirationSQLiteCompatibility:
                 "duration": "1800",
                 "upload_date": "2025-01-10",
                 "resolution": "1080p",
-            }
+            },
         )
         assert video_idea.metadata["views"] == "50000"
-        
+
         # Audio metadata examples
         audio_idea = IdeaInspiration.from_audio(
             title="Podcast Episode",
@@ -339,14 +341,14 @@ class TestIdeaInspirationSQLiteCompatibility:
                 "release_date": "2025-01-12",
                 "format": "mp3",
                 "bitrate": "128kbps",
-            }
+            },
         )
         assert audio_idea.metadata["episode_number"] == "42"
-    
+
     def test_sqlite_serialization_round_trip(self):
         """Test that data can be serialized to dict and restored for SQLite storage."""
         import json
-        
+
         original = IdeaInspiration.from_video(
             title="Python Tutorial",
             description="Learn Python basics",
@@ -358,25 +360,176 @@ class TestIdeaInspirationSQLiteCompatibility:
                 "duration": "1200",
             },
             source_id="vid-123",
-            source_url="https://example.com/video"
+            source_url="https://example.com/video",
         )
-        
+
         # Convert to dict (simulating SQLite storage)
         data_dict = original.to_dict()
-        
+
         # Serialize to JSON (common for SQLite TEXT fields)
         json_str = json.dumps(data_dict)
-        
+
         # Deserialize from JSON
         restored_dict = json.loads(json_str)
-        
+
         # Restore object
         restored = IdeaInspiration.from_dict(restored_dict)
-        
+
         # Verify restoration
         assert restored.title == original.title
         assert restored.metadata == original.metadata
         assert all(isinstance(v, str) for v in restored.metadata.values())
+
+
+class TestIdeaInspirationScoringFields:
+    """Test scoring and category-related fields."""
+
+    def test_create_with_score(self):
+        """Test creating IdeaInspiration with score field."""
+        idea = IdeaInspiration(title="Test Article", score=85)
+        assert idea.score == 85
+
+    def test_create_with_category(self):
+        """Test creating IdeaInspiration with category field."""
+        idea = IdeaInspiration(title="Test Article", category="technology")
+        assert idea.category == "technology"
+
+    def test_create_with_score_detail(self):
+        """Test creating IdeaInspiration with score_detail field."""
+        score_detail = {"US": 250, "woman": 150, "tech": 180}
+        idea = IdeaInspiration(title="Test Article", score_detail=score_detail)
+        assert idea.score_detail == score_detail
+        assert idea.score_detail["US"] == 250
+        assert idea.score_detail["woman"] == 150
+
+    def test_create_with_category_flags(self):
+        """Test creating IdeaInspiration with category_flags field."""
+        category_flags = {"tech": 85, "business": 60, "science": 75}
+        idea = IdeaInspiration(title="Test Article", category_flags=category_flags)
+        assert idea.category_flags == category_flags
+        assert idea.category_flags["tech"] == 85
+        assert 0 <= idea.category_flags["business"] <= 100
+
+    def test_create_with_all_scoring_fields(self):
+        """Test creating IdeaInspiration with all scoring fields."""
+        idea = IdeaInspiration(
+            title="Comprehensive Article",
+            description="Full description",
+            content="Article content",
+            score=90,
+            category="technology",
+            score_detail={"US": 250, "Europe": 180},
+            category_flags={"tech": 95, "innovation": 88},
+        )
+        assert idea.score == 90
+        assert idea.category == "technology"
+        assert idea.score_detail["US"] == 250
+        assert idea.category_flags["tech"] == 95
+
+    def test_default_values_for_scoring_fields(self):
+        """Test default values for scoring fields."""
+        idea = IdeaInspiration(title="Test Article")
+        assert idea.score is None
+        assert idea.category is None
+        assert idea.score_detail == {}
+        assert idea.category_flags == {}
+
+    def test_from_text_with_scoring_fields(self):
+        """Test creating from text with scoring fields."""
+        idea = IdeaInspiration.from_text(
+            title="Article Title",
+            text_content="Content",
+            score=75,
+            category="education",
+            score_detail={"US": 200, "student": 120},
+            category_flags={"learning": 90, "tutorial": 85},
+        )
+        assert idea.score == 75
+        assert idea.category == "education"
+        assert idea.score_detail["student"] == 120
+        assert idea.category_flags["learning"] == 90
+
+    def test_from_video_with_scoring_fields(self):
+        """Test creating from video with scoring fields."""
+        idea = IdeaInspiration.from_video(
+            title="Video Title",
+            subtitle_text="Subtitles",
+            score=88,
+            category="entertainment",
+            score_detail={"US": 300, "viral": 250},
+            category_flags={"comedy": 95, "education": 70},
+        )
+        assert idea.score == 88
+        assert idea.category == "entertainment"
+        assert idea.score_detail["viral"] == 250
+        assert idea.category_flags["comedy"] == 95
+
+    def test_from_audio_with_scoring_fields(self):
+        """Test creating from audio with scoring fields."""
+        idea = IdeaInspiration.from_audio(
+            title="Podcast Episode",
+            transcription="Audio transcription",
+            score=82,
+            category="news",
+            score_detail={"US": 220, "premium": 180},
+            category_flags={"politics": 80, "current_events": 90},
+        )
+        assert idea.score == 82
+        assert idea.category == "news"
+        assert idea.score_detail["premium"] == 180
+        assert idea.category_flags["current_events"] == 90
+
+    def test_serialization_with_scoring_fields(self):
+        """Test serialization includes scoring fields."""
+        idea = IdeaInspiration(
+            title="Test Article",
+            score=85,
+            category="tech",
+            score_detail={"US": 250},
+            category_flags={"innovation": 90},
+        )
+
+        data = idea.to_dict()
+        assert data["score"] == 85
+        assert data["category"] == "tech"
+        assert data["score_detail"] == {"US": 250}
+        assert data["category_flags"] == {"innovation": 90}
+
+    def test_deserialization_with_scoring_fields(self):
+        """Test deserialization includes scoring fields."""
+        data = {
+            "title": "Test Article",
+            "score": 92,
+            "category": "science",
+            "score_detail": {"Europe": 180, "research": 200},
+            "category_flags": {"breakthrough": 95, "innovation": 88},
+        }
+
+        idea = IdeaInspiration.from_dict(data)
+        assert idea.score == 92
+        assert idea.category == "science"
+        assert idea.score_detail == {"Europe": 180, "research": 200}
+        assert idea.category_flags == {"breakthrough": 95, "innovation": 88}
+
+    def test_round_trip_with_scoring_fields(self):
+        """Test round-trip serialization with scoring fields."""
+        original = IdeaInspiration(
+            title="Original Article",
+            description="Description",
+            content="Content",
+            score=78,
+            category="business",
+            score_detail={"US": 260, "enterprise": 190},
+            category_flags={"finance": 85, "strategy": 80},
+        )
+
+        data = original.to_dict()
+        restored = IdeaInspiration.from_dict(data)
+
+        assert restored.score == original.score
+        assert restored.category == original.category
+        assert restored.score_detail == original.score_detail
+        assert restored.category_flags == original.category_flags
 
 
 if __name__ == "__main__":
