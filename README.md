@@ -132,12 +132,12 @@ idea = IdeaInspiration.from_text(
     keywords=["AI", "healthcare", "technology"],
     score=85,  # Overall score
     category="technology",  # Category classification
-    score_detail={
+    performance_multipliers={
         "US": 250,      # 250% performance vs standard for US market
         "woman": 150,   # 150% performance for women demographic
         "tech": 180     # 180% performance in tech category
     },
-    category_flags={
+    content_strengths={
         "innovation": 95,  # Strong innovation flavor (0-100)
         "healthcare": 88,  # Strong healthcare flavor
         "AI": 92          # Strong AI flavor
@@ -147,13 +147,13 @@ idea = IdeaInspiration.from_text(
 # Access scoring fields
 print(f"Score: {idea.score}")
 print(f"Category: {idea.category}")
-print(f"US market multiplier: {idea.score_detail['US']}%")
-print(f"Innovation strength: {idea.category_flags['innovation']}/100")
+print(f"US market multiplier: {idea.performance_multipliers['US']}%")
+print(f"Innovation strength: {idea.content_strengths['innovation']}/100")
 ```
 
-**Score Detail**: Category-specific score multipliers indicating performance percentages. For example, `{"US": 250}` means content performs 250% better in the US market compared to industry standard.
+**Performance Multipliers**: Category-specific performance multipliers indicating performance percentages. For example, `{"US": 250}` means content performs 250% better in the US market compared to industry standard.
 
-**Category Flags**: Flavor strength ratings on a 0-100 scale indicating how strongly the content aligns with specific categories or themes.
+**Content Strengths**: Flavor strength ratings on a 0-100 scale indicating how strongly the content aligns with specific categories or themes.
 
 ## Data Model
 
@@ -173,8 +173,8 @@ The core data model with the following fields:
 | `source_url` | `Optional[str]` | URL to original content |
 | `score` | `Optional[int]` | Numerical score value for content evaluation |
 | `category` | `Optional[str]` | Category classification for the content |
-| `score_detail` | `Dict[str, int]` | Category-specific score multipliers (e.g., `{'US': 250, 'woman': 150}`) - percentages for overperformers |
-| `category_flags` | `Dict[str, int]` | Category flavor strength ratings 0-100 (e.g., `{'tech': 85, 'business': 60}`) |
+| `performance_multipliers` | `Dict[str, int]` | Category-specific performance multipliers (e.g., `{'US': 250, 'woman': 150}`) - percentages for overperformers |
+| `content_strengths` | `Dict[str, int]` | Content flavor strength ratings 0-100 (e.g., `{'tech': 85, 'business': 60}`) |
 
 ### ContentType
 

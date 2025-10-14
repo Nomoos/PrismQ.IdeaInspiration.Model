@@ -16,8 +16,8 @@ This release adds comprehensive scoring and categorization capabilities to the I
 - Optional field, defaults to `None`
 - Example: `category="technology"`
 
-### 3. Score Detail (`Dict[str, int]`)
-- Category-specific score multipliers showing performance percentages
+### 3. Performance Multipliers (`Dict[str, int]`)
+- Category-specific performance multipliers showing performance percentages
 - Indicates how content performs vs. industry standard/baseline
 - Empty dict by default
 - Example use cases:
@@ -25,7 +25,7 @@ This release adds comprehensive scoring and categorization capabilities to the I
   - Demographic performance: `{"woman": 150, "man": 140}` (150% performance with women demographic)
   - Category performance: `{"tech": 180, "startup": 200}` (180% performance in tech category)
 
-### 4. Category Flags (`Dict[str, int]`)
+### 4. Content Strengths (`Dict[str, int]`)
 - Content flavor strength ratings on 0-100 scale
 - Indicates how strongly content aligns with specific themes/categories
 - Empty dict by default
@@ -63,17 +63,17 @@ class IdeaInspiration:
     source_url: Optional[str] = None
     score: Optional[int] = None  # NEW
     category: Optional[str] = None  # NEW
-    score_detail: Dict[str, int] = field(default_factory=dict)  # NEW
-    category_flags: Dict[str, int] = field(default_factory=dict)  # NEW
+    performance_multipliers: Dict[str, int] = field(default_factory=dict)  # NEW
+    content_strengths: Dict[str, int] = field(default_factory=dict)  # NEW
 ```
 
 ### Factory Method Updates
 
 All factory methods now support the new fields:
 
-- `IdeaInspiration.from_text()` - Added `score`, `category`, `score_detail`, `category_flags` parameters
-- `IdeaInspiration.from_video()` - Added `score`, `category`, `score_detail`, `category_flags` parameters
-- `IdeaInspiration.from_audio()` - Added `score`, `category`, `score_detail`, `category_flags` parameters
+- `IdeaInspiration.from_text()` - Added `score`, `category`, `performance_multipliers`, `content_strengths` parameters
+- `IdeaInspiration.from_video()` - Added `score`, `category`, `performance_multipliers`, `content_strengths` parameters
+- `IdeaInspiration.from_audio()` - Added `score`, `category`, `performance_multipliers`, `content_strengths` parameters
 
 ### Serialization Updates
 
@@ -92,14 +92,14 @@ idea = IdeaInspiration.from_text(
 )
 ```
 
-### Score Detail - Market Performance
+### Performance Multipliers - Market Performance
 ```python
 idea = IdeaInspiration.from_video(
     title="Tech Startup Success Stories",
     subtitle_text="Learn from entrepreneurs...",
     score=90,
     category="business",
-    score_detail={
+    performance_multipliers={
         "US": 250,      # 250% vs standard in US market
         "Europe": 180,  # 180% vs standard in Europe
         "woman": 150,   # 150% performance with women
@@ -107,14 +107,14 @@ idea = IdeaInspiration.from_video(
 )
 ```
 
-### Category Flags - Content Flavor
+### Content Strengths - Content Flavor
 ```python
 idea = IdeaInspiration.from_audio(
     title="Healthcare Innovation Podcast",
     transcription="Breakthrough technologies...",
     score=88,
     category="healthcare",
-    category_flags={
+    content_strengths={
         "innovation": 95,   # Very strong innovation flavor
         "technology": 88,   # Strong technology flavor
         "healthcare": 92,   # Very strong healthcare flavor
@@ -196,8 +196,8 @@ idea = IdeaInspiration.from_text(
     text_content="Content...",
     score=85,
     category="technology",
-    score_detail={"US": 250},
-    category_flags={"innovation": 90}
+    performance_multipliers={"US": 250},
+    content_strengths={"innovation": 90}
 )
 ```
 

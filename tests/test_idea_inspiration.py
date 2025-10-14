@@ -394,21 +394,21 @@ class TestIdeaInspirationScoringFields:
         idea = IdeaInspiration(title="Test Article", category="technology")
         assert idea.category == "technology"
 
-    def test_create_with_score_detail(self):
-        """Test creating IdeaInspiration with score_detail field."""
-        score_detail = {"US": 250, "woman": 150, "tech": 180}
-        idea = IdeaInspiration(title="Test Article", score_detail=score_detail)
-        assert idea.score_detail == score_detail
-        assert idea.score_detail["US"] == 250
-        assert idea.score_detail["woman"] == 150
+    def test_create_with_performance_multipliers(self):
+        """Test creating IdeaInspiration with performance_multipliers field."""
+        performance_multipliers = {"US": 250, "woman": 150, "tech": 180}
+        idea = IdeaInspiration(title="Test Article", performance_multipliers=performance_multipliers)
+        assert idea.performance_multipliers == performance_multipliers
+        assert idea.performance_multipliers["US"] == 250
+        assert idea.performance_multipliers["woman"] == 150
 
-    def test_create_with_category_flags(self):
-        """Test creating IdeaInspiration with category_flags field."""
-        category_flags = {"tech": 85, "business": 60, "science": 75}
-        idea = IdeaInspiration(title="Test Article", category_flags=category_flags)
-        assert idea.category_flags == category_flags
-        assert idea.category_flags["tech"] == 85
-        assert 0 <= idea.category_flags["business"] <= 100
+    def test_create_with_content_strengths(self):
+        """Test creating IdeaInspiration with content_strengths field."""
+        content_strengths = {"tech": 85, "business": 60, "science": 75}
+        idea = IdeaInspiration(title="Test Article", content_strengths=content_strengths)
+        assert idea.content_strengths == content_strengths
+        assert idea.content_strengths["tech"] == 85
+        assert 0 <= idea.content_strengths["business"] <= 100
 
     def test_create_with_all_scoring_fields(self):
         """Test creating IdeaInspiration with all scoring fields."""
@@ -418,21 +418,21 @@ class TestIdeaInspirationScoringFields:
             content="Article content",
             score=90,
             category="technology",
-            score_detail={"US": 250, "Europe": 180},
-            category_flags={"tech": 95, "innovation": 88},
+            performance_multipliers={"US": 250, "Europe": 180},
+            content_strengths={"tech": 95, "innovation": 88},
         )
         assert idea.score == 90
         assert idea.category == "technology"
-        assert idea.score_detail["US"] == 250
-        assert idea.category_flags["tech"] == 95
+        assert idea.performance_multipliers["US"] == 250
+        assert idea.content_strengths["tech"] == 95
 
     def test_default_values_for_scoring_fields(self):
         """Test default values for scoring fields."""
         idea = IdeaInspiration(title="Test Article")
         assert idea.score is None
         assert idea.category is None
-        assert idea.score_detail == {}
-        assert idea.category_flags == {}
+        assert idea.performance_multipliers == {}
+        assert idea.content_strengths == {}
 
     def test_from_text_with_scoring_fields(self):
         """Test creating from text with scoring fields."""
@@ -441,13 +441,13 @@ class TestIdeaInspirationScoringFields:
             text_content="Content",
             score=75,
             category="education",
-            score_detail={"US": 200, "student": 120},
-            category_flags={"learning": 90, "tutorial": 85},
+            performance_multipliers={"US": 200, "student": 120},
+            content_strengths={"learning": 90, "tutorial": 85},
         )
         assert idea.score == 75
         assert idea.category == "education"
-        assert idea.score_detail["student"] == 120
-        assert idea.category_flags["learning"] == 90
+        assert idea.performance_multipliers["student"] == 120
+        assert idea.content_strengths["learning"] == 90
 
     def test_from_video_with_scoring_fields(self):
         """Test creating from video with scoring fields."""
@@ -456,13 +456,13 @@ class TestIdeaInspirationScoringFields:
             subtitle_text="Subtitles",
             score=88,
             category="entertainment",
-            score_detail={"US": 300, "viral": 250},
-            category_flags={"comedy": 95, "education": 70},
+            performance_multipliers={"US": 300, "viral": 250},
+            content_strengths={"comedy": 95, "education": 70},
         )
         assert idea.score == 88
         assert idea.category == "entertainment"
-        assert idea.score_detail["viral"] == 250
-        assert idea.category_flags["comedy"] == 95
+        assert idea.performance_multipliers["viral"] == 250
+        assert idea.content_strengths["comedy"] == 95
 
     def test_from_audio_with_scoring_fields(self):
         """Test creating from audio with scoring fields."""
@@ -471,13 +471,13 @@ class TestIdeaInspirationScoringFields:
             transcription="Audio transcription",
             score=82,
             category="news",
-            score_detail={"US": 220, "premium": 180},
-            category_flags={"politics": 80, "current_events": 90},
+            performance_multipliers={"US": 220, "premium": 180},
+            content_strengths={"politics": 80, "current_events": 90},
         )
         assert idea.score == 82
         assert idea.category == "news"
-        assert idea.score_detail["premium"] == 180
-        assert idea.category_flags["current_events"] == 90
+        assert idea.performance_multipliers["premium"] == 180
+        assert idea.content_strengths["current_events"] == 90
 
     def test_serialization_with_scoring_fields(self):
         """Test serialization includes scoring fields."""
@@ -485,15 +485,15 @@ class TestIdeaInspirationScoringFields:
             title="Test Article",
             score=85,
             category="tech",
-            score_detail={"US": 250},
-            category_flags={"innovation": 90},
+            performance_multipliers={"US": 250},
+            content_strengths={"innovation": 90},
         )
 
         data = idea.to_dict()
         assert data["score"] == 85
         assert data["category"] == "tech"
-        assert data["score_detail"] == {"US": 250}
-        assert data["category_flags"] == {"innovation": 90}
+        assert data["performance_multipliers"] == {"US": 250}
+        assert data["content_strengths"] == {"innovation": 90}
 
     def test_deserialization_with_scoring_fields(self):
         """Test deserialization includes scoring fields."""
@@ -501,15 +501,15 @@ class TestIdeaInspirationScoringFields:
             "title": "Test Article",
             "score": 92,
             "category": "science",
-            "score_detail": {"Europe": 180, "research": 200},
-            "category_flags": {"breakthrough": 95, "innovation": 88},
+            "performance_multipliers": {"Europe": 180, "research": 200},
+            "content_strengths": {"breakthrough": 95, "innovation": 88},
         }
 
         idea = IdeaInspiration.from_dict(data)
         assert idea.score == 92
         assert idea.category == "science"
-        assert idea.score_detail == {"Europe": 180, "research": 200}
-        assert idea.category_flags == {"breakthrough": 95, "innovation": 88}
+        assert idea.performance_multipliers == {"Europe": 180, "research": 200}
+        assert idea.content_strengths == {"breakthrough": 95, "innovation": 88}
 
     def test_round_trip_with_scoring_fields(self):
         """Test round-trip serialization with scoring fields."""
@@ -519,8 +519,8 @@ class TestIdeaInspirationScoringFields:
             content="Content",
             score=78,
             category="business",
-            score_detail={"US": 260, "enterprise": 190},
-            category_flags={"finance": 85, "strategy": 80},
+            performance_multipliers={"US": 260, "enterprise": 190},
+            content_strengths={"finance": 85, "strategy": 80},
         )
 
         data = original.to_dict()
@@ -528,8 +528,8 @@ class TestIdeaInspirationScoringFields:
 
         assert restored.score == original.score
         assert restored.category == original.category
-        assert restored.score_detail == original.score_detail
-        assert restored.category_flags == original.category_flags
+        assert restored.performance_multipliers == original.performance_multipliers
+        assert restored.content_strengths == original.content_strengths
 
 
 if __name__ == "__main__":

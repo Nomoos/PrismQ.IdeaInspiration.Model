@@ -44,10 +44,10 @@ class IdeaInspiration:
         source_url: Optional URL to the original content
         score: Optional numerical score value for the content
         category: Optional category classification for the content
-        score_detail: Category-specific score multipliers
-                      (e.g., {'US': 250, 'woman': 150})
-        category_flags: Category flavor strength ratings 0-100
-                        (e.g., {'tech': 85, 'business': 60})
+        performance_multipliers: Category-specific performance multipliers
+                                (e.g., {'US': 250, 'woman': 150})
+        content_strengths: Content flavor strength ratings 0-100
+                          (e.g., {'tech': 85, 'business': 60})
 
     Example:
         >>> idea = IdeaInspiration(
@@ -69,8 +69,8 @@ class IdeaInspiration:
     source_url: Optional[str] = None
     score: Optional[int] = None
     category: Optional[str] = None
-    score_detail: Dict[str, int] = field(default_factory=dict)
-    category_flags: Dict[str, int] = field(default_factory=dict)
+    performance_multipliers: Dict[str, int] = field(default_factory=dict)
+    content_strengths: Dict[str, int] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert IdeaInspiration to dictionary representation.
@@ -113,8 +113,8 @@ class IdeaInspiration:
             source_url=data.get("source_url"),
             score=data.get("score"),
             category=data.get("category"),
-            score_detail=data.get("score_detail", {}),
-            category_flags=data.get("category_flags", {}),
+            performance_multipliers=data.get("performance_multipliers", {}),
+            content_strengths=data.get("content_strengths", {}),
         )
 
     @classmethod
@@ -129,8 +129,8 @@ class IdeaInspiration:
         source_url: Optional[str] = None,
         score: Optional[int] = None,
         category: Optional[str] = None,
-        score_detail: Optional[Dict[str, int]] = None,
-        category_flags: Optional[Dict[str, int]] = None,
+        performance_multipliers: Optional[Dict[str, int]] = None,
+        content_strengths: Optional[Dict[str, int]] = None,
     ) -> "IdeaInspiration":
         """Create IdeaInspiration from text content.
 
@@ -144,8 +144,8 @@ class IdeaInspiration:
             source_url: Optional source URL
             score: Optional numerical score value
             category: Optional category classification
-            score_detail: Optional category-specific score multipliers
-            category_flags: Optional category flavor strength ratings (0-100)
+            performance_multipliers: Optional category-specific performance multipliers
+            content_strengths: Optional content flavor strength ratings (0-100)
 
         Returns:
             IdeaInspiration instance with ContentType.TEXT
@@ -161,8 +161,8 @@ class IdeaInspiration:
             source_url=source_url,
             score=score,
             category=category,
-            score_detail=score_detail or {},
-            category_flags=category_flags or {},
+            performance_multipliers=performance_multipliers or {},
+            content_strengths=content_strengths or {},
         )
 
     @classmethod
@@ -177,8 +177,8 @@ class IdeaInspiration:
         source_url: Optional[str] = None,
         score: Optional[int] = None,
         category: Optional[str] = None,
-        score_detail: Optional[Dict[str, int]] = None,
-        category_flags: Optional[Dict[str, int]] = None,
+        performance_multipliers: Optional[Dict[str, int]] = None,
+        content_strengths: Optional[Dict[str, int]] = None,
     ) -> "IdeaInspiration":
         """Create IdeaInspiration from video content with subtitles.
 
@@ -193,8 +193,8 @@ class IdeaInspiration:
             source_url: Optional video URL
             score: Optional numerical score value
             category: Optional category classification
-            score_detail: Optional category-specific score multipliers
-            category_flags: Optional category flavor strength ratings (0-100)
+            performance_multipliers: Optional category-specific performance multipliers
+            content_strengths: Optional content flavor strength ratings (0-100)
 
         Returns:
             IdeaInspiration instance with ContentType.VIDEO
@@ -210,8 +210,8 @@ class IdeaInspiration:
             source_url=source_url,
             score=score,
             category=category,
-            score_detail=score_detail or {},
-            category_flags=category_flags or {},
+            performance_multipliers=performance_multipliers or {},
+            content_strengths=content_strengths or {},
         )
 
     @classmethod
@@ -226,8 +226,8 @@ class IdeaInspiration:
         source_url: Optional[str] = None,
         score: Optional[int] = None,
         category: Optional[str] = None,
-        score_detail: Optional[Dict[str, int]] = None,
-        category_flags: Optional[Dict[str, int]] = None,
+        performance_multipliers: Optional[Dict[str, int]] = None,
+        content_strengths: Optional[Dict[str, int]] = None,
     ) -> "IdeaInspiration":
         """Create IdeaInspiration from audio content with transcription.
 
@@ -242,8 +242,8 @@ class IdeaInspiration:
             source_url: Optional audio URL
             score: Optional numerical score value
             category: Optional category classification
-            score_detail: Optional category-specific score multipliers
-            category_flags: Optional category flavor strength ratings (0-100)
+            performance_multipliers: Optional category-specific performance multipliers
+            content_strengths: Optional content flavor strength ratings (0-100)
 
         Returns:
             IdeaInspiration instance with ContentType.AUDIO
@@ -259,8 +259,8 @@ class IdeaInspiration:
             source_url=source_url,
             score=score,
             category=category,
-            score_detail=score_detail or {},
-            category_flags=category_flags or {},
+            performance_multipliers=performance_multipliers or {},
+            content_strengths=content_strengths or {},
         )
 
     def __repr__(self) -> str:
