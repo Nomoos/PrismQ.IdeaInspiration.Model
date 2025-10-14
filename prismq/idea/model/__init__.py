@@ -28,7 +28,7 @@ Example:
 
 from prismq.idea.model.idea_inspiration import IdeaInspiration, ContentType
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "IdeaInspiration",

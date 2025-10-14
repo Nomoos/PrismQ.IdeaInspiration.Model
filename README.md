@@ -299,6 +299,21 @@ This will demonstrate:
 - Content type comparison
 - Metadata best practices for SQLite/S3DB compatibility
 
+### Scoring and Category Features
+
+Run the scoring demonstration to see the new scoring and category features:
+
+```bash
+python scoring_demo.py
+```
+
+This demonstrates:
+- Basic scoring and category assignment
+- Score detail with market-specific performance multipliers
+- Category flags with flavor strength ratings (0-100 scale)
+- Comprehensive scoring examples
+- Serialization with scoring fields
+
 ### SQLite/S3DB Demonstration
 
 Run the SQLite demonstration to see database compatibility:
