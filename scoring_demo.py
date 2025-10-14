@@ -107,11 +107,15 @@ def main():
     print(f"Overall Score: {idea4.score}/100")
     print()
     print("Performance Multipliers:")
-    for segment, multiplier in sorted(idea4.performance_multipliers.items(), key=lambda x: x[1], reverse=True):
+    for segment, multiplier in sorted(
+        idea4.performance_multipliers.items(), key=lambda x: x[1], reverse=True
+    ):
         print(f"  {segment:20s}: {multiplier}%")
     print()
     print("Content Flavors:")
-    for flavor, strength in sorted(idea4.content_strengths.items(), key=lambda x: x[1], reverse=True):
+    for flavor, strength in sorted(
+        idea4.content_strengths.items(), key=lambda x: x[1], reverse=True
+    ):
         print(f"  {flavor:20s}: {strength}/100")
     print()
 
@@ -131,7 +135,9 @@ def main():
     print("Successfully restored from dictionary:")
     print(f"  Score matches: {restored.score == idea4.score}")
     print(f"  Category matches: {restored.category == idea4.category}")
-    print(f"  Performance multipliers match: {restored.performance_multipliers == idea4.performance_multipliers}")
+    print(
+        f"  Performance multipliers match: {restored.performance_multipliers == idea4.performance_multipliers}"
+    )
     print(f"  Content strengths match: {restored.content_strengths == idea4.content_strengths}")
     print()
 

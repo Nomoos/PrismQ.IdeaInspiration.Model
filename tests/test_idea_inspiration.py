@@ -397,7 +397,9 @@ class TestIdeaInspirationScoringFields:
     def test_create_with_performance_multipliers(self):
         """Test creating IdeaInspiration with performance_multipliers field."""
         performance_multipliers = {"US": 250, "woman": 150, "tech": 180}
-        idea = IdeaInspiration(title="Test Article", performance_multipliers=performance_multipliers)
+        idea = IdeaInspiration(
+            title="Test Article", performance_multipliers=performance_multipliers
+        )
         assert idea.performance_multipliers == performance_multipliers
         assert idea.performance_multipliers["US"] == 250
         assert idea.performance_multipliers["woman"] == 150
