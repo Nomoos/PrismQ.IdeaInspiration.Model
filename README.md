@@ -118,6 +118,43 @@ restored = IdeaInspiration.from_dict(data)
 assert restored.title == idea.title
 ```
 
+### Scoring and Category Fields
+
+The model supports scoring and categorization fields for content evaluation:
+
+```python
+from prismq.idea.model import IdeaInspiration
+
+# Create with scoring and category information
+idea = IdeaInspiration.from_text(
+    title="AI in Healthcare",
+    text_content="Artificial intelligence is transforming healthcare...",
+    keywords=["AI", "healthcare", "technology"],
+    score=85,  # Overall score
+    category="technology",  # Category classification
+    score_detail={
+        "US": 250,      # 250% performance vs standard for US market
+        "woman": 150,   # 150% performance for women demographic
+        "tech": 180     # 180% performance in tech category
+    },
+    category_flags={
+        "innovation": 95,  # Strong innovation flavor (0-100)
+        "healthcare": 88,  # Strong healthcare flavor
+        "AI": 92          # Strong AI flavor
+    }
+)
+
+# Access scoring fields
+print(f"Score: {idea.score}")
+print(f"Category: {idea.category}")
+print(f"US market multiplier: {idea.score_detail['US']}%")
+print(f"Innovation strength: {idea.category_flags['innovation']}/100")
+```
+
+**Score Detail**: Category-specific score multipliers indicating performance percentages. For example, `{"US": 250}` means content performs 250% better in the US market compared to industry standard.
+
+**Category Flags**: Flavor strength ratings on a 0-100 scale indicating how strongly the content aligns with specific categories or themes.
+
 ## Data Model
 
 ### IdeaInspiration
@@ -134,6 +171,10 @@ The core data model with the following fields:
 | `metadata` | `Dict[str, str]` | Additional source-specific metadata (string key-value pairs for SQLite compatibility) |
 | `source_id` | `Optional[str]` | Unique identifier from source platform |
 | `source_url` | `Optional[str]` | URL to original content |
+| `score` | `Optional[int]` | Numerical score value for content evaluation |
+| `category` | `Optional[str]` | Category classification for the content |
+| `score_detail` | `Dict[str, int]` | Category-specific score multipliers (e.g., `{'US': 250, 'woman': 150}`) - percentages for overperformers |
+| `category_flags` | `Dict[str, int]` | Category flavor strength ratings 0-100 (e.g., `{'tech': 85, 'business': 60}`) |
 
 ### ContentType
 

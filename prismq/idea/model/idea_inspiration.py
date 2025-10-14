@@ -38,9 +38,16 @@ class IdeaInspiration:
         content: The main text content (body text, subtitles, or transcription)
         keywords: List of relevant keywords or tags
         source_type: Type of content source (text/video/audio)
-        metadata: Additional source-specific metadata (string key-value pairs for SQLite compatibility)
+        metadata: Additional source-specific metadata (string key-value pairs for
+                  SQLite compatibility)
         source_id: Optional unique identifier from the source platform
         source_url: Optional URL to the original content
+        score: Optional numerical score value for the content
+        category: Optional category classification for the content
+        score_detail: Category-specific score multipliers
+                      (e.g., {'US': 250, 'woman': 150})
+        category_flags: Category flavor strength ratings 0-100
+                        (e.g., {'tech': 85, 'business': 60})
 
     Example:
         >>> idea = IdeaInspiration(
@@ -60,6 +67,10 @@ class IdeaInspiration:
     metadata: Dict[str, str] = field(default_factory=dict)
     source_id: Optional[str] = None
     source_url: Optional[str] = None
+    score: Optional[int] = None
+    category: Optional[str] = None
+    score_detail: Dict[str, int] = field(default_factory=dict)
+    category_flags: Dict[str, int] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert IdeaInspiration to dictionary representation.
@@ -100,6 +111,10 @@ class IdeaInspiration:
             metadata=data.get("metadata", {}),
             source_id=data.get("source_id"),
             source_url=data.get("source_url"),
+            score=data.get("score"),
+            category=data.get("category"),
+            score_detail=data.get("score_detail", {}),
+            category_flags=data.get("category_flags", {}),
         )
 
     @classmethod
@@ -112,6 +127,10 @@ class IdeaInspiration:
         metadata: Optional[Dict[str, str]] = None,
         source_id: Optional[str] = None,
         source_url: Optional[str] = None,
+        score: Optional[int] = None,
+        category: Optional[str] = None,
+        score_detail: Optional[Dict[str, int]] = None,
+        category_flags: Optional[Dict[str, int]] = None,
     ) -> "IdeaInspiration":
         """Create IdeaInspiration from text content.
 
@@ -123,6 +142,10 @@ class IdeaInspiration:
             metadata: Additional metadata (string key-value pairs for SQLite compatibility)
             source_id: Optional source identifier
             source_url: Optional source URL
+            score: Optional numerical score value
+            category: Optional category classification
+            score_detail: Optional category-specific score multipliers
+            category_flags: Optional category flavor strength ratings (0-100)
 
         Returns:
             IdeaInspiration instance with ContentType.TEXT
@@ -136,6 +159,10 @@ class IdeaInspiration:
             metadata=metadata or {},
             source_id=source_id,
             source_url=source_url,
+            score=score,
+            category=category,
+            score_detail=score_detail or {},
+            category_flags=category_flags or {},
         )
 
     @classmethod
@@ -148,6 +175,10 @@ class IdeaInspiration:
         metadata: Optional[Dict[str, str]] = None,
         source_id: Optional[str] = None,
         source_url: Optional[str] = None,
+        score: Optional[int] = None,
+        category: Optional[str] = None,
+        score_detail: Optional[Dict[str, int]] = None,
+        category_flags: Optional[Dict[str, int]] = None,
     ) -> "IdeaInspiration":
         """Create IdeaInspiration from video content with subtitles.
 
@@ -156,9 +187,14 @@ class IdeaInspiration:
             description: Video description
             subtitle_text: Subtitles or transcription text
             keywords: List of keywords or tags
-            metadata: Additional video metadata (string key-value pairs, e.g., views="1000", likes="50")
+            metadata: Additional video metadata
+                      (string key-value pairs, e.g., views="1000", likes="50")
             source_id: Optional video identifier
             source_url: Optional video URL
+            score: Optional numerical score value
+            category: Optional category classification
+            score_detail: Optional category-specific score multipliers
+            category_flags: Optional category flavor strength ratings (0-100)
 
         Returns:
             IdeaInspiration instance with ContentType.VIDEO
@@ -172,6 +208,10 @@ class IdeaInspiration:
             metadata=metadata or {},
             source_id=source_id,
             source_url=source_url,
+            score=score,
+            category=category,
+            score_detail=score_detail or {},
+            category_flags=category_flags or {},
         )
 
     @classmethod
@@ -184,6 +224,10 @@ class IdeaInspiration:
         metadata: Optional[Dict[str, str]] = None,
         source_id: Optional[str] = None,
         source_url: Optional[str] = None,
+        score: Optional[int] = None,
+        category: Optional[str] = None,
+        score_detail: Optional[Dict[str, int]] = None,
+        category_flags: Optional[Dict[str, int]] = None,
     ) -> "IdeaInspiration":
         """Create IdeaInspiration from audio content with transcription.
 
@@ -192,9 +236,14 @@ class IdeaInspiration:
             description: Audio description
             transcription: Transcribed audio text
             keywords: List of keywords or tags
-            metadata: Additional audio metadata (string key-value pairs, e.g., duration="3600", format="mp3")
+            metadata: Additional audio metadata
+                      (string key-value pairs, e.g., duration="3600", format="mp3")
             source_id: Optional audio identifier
             source_url: Optional audio URL
+            score: Optional numerical score value
+            category: Optional category classification
+            score_detail: Optional category-specific score multipliers
+            category_flags: Optional category flavor strength ratings (0-100)
 
         Returns:
             IdeaInspiration instance with ContentType.AUDIO
@@ -208,6 +257,10 @@ class IdeaInspiration:
             metadata=metadata or {},
             source_id=source_id,
             source_url=source_url,
+            score=score,
+            category=category,
+            score_detail=score_detail or {},
+            category_flags=category_flags or {},
         )
 
     def __repr__(self) -> str:
