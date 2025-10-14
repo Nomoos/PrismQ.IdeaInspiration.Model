@@ -10,7 +10,7 @@ for creating instances from different content types.
 """
 
 from dataclasses import dataclass, field, asdict
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Optional, Any
 from enum import Enum
 
 
@@ -38,7 +38,7 @@ class IdeaInspiration:
         content: The main text content (body text, subtitles, or transcription)
         keywords: List of relevant keywords or tags
         source_type: Type of content source (text/video/audio)
-        metadata: Additional source-specific metadata
+        metadata: Additional source-specific metadata (string key-value pairs for SQLite compatibility)
         source_id: Optional unique identifier from the source platform
         source_url: Optional URL to the original content
 
@@ -57,7 +57,7 @@ class IdeaInspiration:
     content: str = ""
     keywords: List[str] = field(default_factory=list)
     source_type: ContentType = ContentType.UNKNOWN
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: Dict[str, str] = field(default_factory=dict)
     source_id: Optional[str] = None
     source_url: Optional[str] = None
 
@@ -109,7 +109,7 @@ class IdeaInspiration:
         description: str = "",
         text_content: str = "",
         keywords: Optional[List[str]] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: Optional[Dict[str, str]] = None,
         source_id: Optional[str] = None,
         source_url: Optional[str] = None,
     ) -> "IdeaInspiration":
@@ -120,7 +120,7 @@ class IdeaInspiration:
             description: Brief description or summary
             text_content: Full text content
             keywords: List of keywords or tags
-            metadata: Additional metadata
+            metadata: Additional metadata (string key-value pairs for SQLite compatibility)
             source_id: Optional source identifier
             source_url: Optional source URL
 
@@ -145,7 +145,7 @@ class IdeaInspiration:
         description: str = "",
         subtitle_text: str = "",
         keywords: Optional[List[str]] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: Optional[Dict[str, str]] = None,
         source_id: Optional[str] = None,
         source_url: Optional[str] = None,
     ) -> "IdeaInspiration":
@@ -156,7 +156,7 @@ class IdeaInspiration:
             description: Video description
             subtitle_text: Subtitles or transcription text
             keywords: List of keywords or tags
-            metadata: Additional video metadata (views, likes, etc.)
+            metadata: Additional video metadata (string key-value pairs, e.g., views="1000", likes="50")
             source_id: Optional video identifier
             source_url: Optional video URL
 
@@ -181,7 +181,7 @@ class IdeaInspiration:
         description: str = "",
         transcription: str = "",
         keywords: Optional[List[str]] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: Optional[Dict[str, str]] = None,
         source_id: Optional[str] = None,
         source_url: Optional[str] = None,
     ) -> "IdeaInspiration":
@@ -192,7 +192,7 @@ class IdeaInspiration:
             description: Audio description
             transcription: Transcribed audio text
             keywords: List of keywords or tags
-            metadata: Additional audio metadata
+            metadata: Additional audio metadata (string key-value pairs, e.g., duration="3600", format="mp3")
             source_id: Optional audio identifier
             source_url: Optional audio URL
 

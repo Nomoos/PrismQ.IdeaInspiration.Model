@@ -197,7 +197,7 @@ class TestIdeaInspirationFactoryMethods:
             description="Video description",
             subtitle_text="Video subtitles and transcription",
             keywords=["video", "tutorial"],
-            metadata={"views": 1000, "likes": 50},
+            metadata={"views": "1000", "likes": "50"},
             source_id="video-123",
             source_url="https://example.com/video",
         )
@@ -207,7 +207,7 @@ class TestIdeaInspirationFactoryMethods:
         assert idea.content == "Video subtitles and transcription"
         assert idea.keywords == ["video", "tutorial"]
         assert idea.source_type == ContentType.VIDEO
-        assert idea.metadata == {"views": 1000, "likes": 50}
+        assert idea.metadata == {"views": "1000", "likes": "50"}
         assert idea.source_id == "video-123"
         assert idea.source_url == "https://example.com/video"
 
@@ -218,7 +218,7 @@ class TestIdeaInspirationFactoryMethods:
             description="Episode description",
             transcription="Full audio transcription",
             keywords=["podcast", "audio"],
-            metadata={"duration": 3600},
+            metadata={"duration": "3600", "format": "mp3"},
             source_id="audio-123",
             source_url="https://example.com/podcast",
         )
@@ -228,7 +228,7 @@ class TestIdeaInspirationFactoryMethods:
         assert idea.content == "Full audio transcription"
         assert idea.keywords == ["podcast", "audio"]
         assert idea.source_type == ContentType.AUDIO
-        assert idea.metadata == {"duration": 3600}
+        assert idea.metadata == {"duration": "3600", "format": "mp3"}
         assert idea.source_id == "audio-123"
         assert idea.source_url == "https://example.com/podcast"
 
@@ -276,6 +276,107 @@ class TestIdeaInspirationRepr:
         repr_str = repr(idea)
         assert len(repr_str) < len(long_title) + 100  # Truncated
         assert "..." in repr_str
+
+
+class TestIdeaInspirationSQLiteCompatibility:
+    """Test SQLite (S3DB) compatibility with string metadata."""
+
+    def test_metadata_string_values_only(self):
+        """Test that metadata only accepts string values for SQLite compatibility."""
+        # All metadata values should be strings
+        idea = IdeaInspiration.from_text(
+            title="Test Article",
+            text_content="Content",
+            metadata={
+                "author": "John Doe",
+                "publish_date": "2025-01-15",
+                "views": "1000",  # numeric values as strings
+                "rating": "4.5",  # float values as strings
+                "category": "technology",
+            }
+        )
+        
+        # Verify all metadata values are strings
+        for key, value in idea.metadata.items():
+            assert isinstance(value, str), f"Metadata value for '{key}' should be string, got {type(value)}"
+    
+    def test_metadata_examples_for_different_sources(self):
+        """Test metadata examples for text, video, and audio sources."""
+        # Text metadata examples
+        text_idea = IdeaInspiration.from_text(
+            title="Article Title",
+            metadata={
+                "author": "Jane Smith",
+                "publish_date": "2025-01-15",
+                "word_count": "1500",
+                "reading_time": "7",
+                "platform": "medium",
+            }
+        )
+        assert text_idea.metadata["word_count"] == "1500"
+        
+        # Video metadata examples
+        video_idea = IdeaInspiration.from_video(
+            title="Tutorial Video",
+            metadata={
+                "channel": "TechChannel",
+                "views": "50000",
+                "likes": "2500",
+                "duration": "1800",
+                "upload_date": "2025-01-10",
+                "resolution": "1080p",
+            }
+        )
+        assert video_idea.metadata["views"] == "50000"
+        
+        # Audio metadata examples
+        audio_idea = IdeaInspiration.from_audio(
+            title="Podcast Episode",
+            metadata={
+                "host": "John Podcast",
+                "episode_number": "42",
+                "duration": "3600",
+                "release_date": "2025-01-12",
+                "format": "mp3",
+                "bitrate": "128kbps",
+            }
+        )
+        assert audio_idea.metadata["episode_number"] == "42"
+    
+    def test_sqlite_serialization_round_trip(self):
+        """Test that data can be serialized to dict and restored for SQLite storage."""
+        import json
+        
+        original = IdeaInspiration.from_video(
+            title="Python Tutorial",
+            description="Learn Python basics",
+            subtitle_text="Welcome to Python...",
+            keywords=["python", "tutorial"],
+            metadata={
+                "views": "10000",
+                "likes": "500",
+                "duration": "1200",
+            },
+            source_id="vid-123",
+            source_url="https://example.com/video"
+        )
+        
+        # Convert to dict (simulating SQLite storage)
+        data_dict = original.to_dict()
+        
+        # Serialize to JSON (common for SQLite TEXT fields)
+        json_str = json.dumps(data_dict)
+        
+        # Deserialize from JSON
+        restored_dict = json.loads(json_str)
+        
+        # Restore object
+        restored = IdeaInspiration.from_dict(restored_dict)
+        
+        # Verify restoration
+        assert restored.title == original.title
+        assert restored.metadata == original.metadata
+        assert all(isinstance(v, str) for v in restored.metadata.values())
 
 
 if __name__ == "__main__":
