@@ -438,6 +438,8 @@ PrismQ.IdeaInspiration.Model/
 
 ## Version History
 
+- **v0.2.1** - Field naming improvements: `score_detail` → `performance_multipliers`, `category_flags` → `content_strengths`
+- **v0.2.0** - Added scoring and category fields for content evaluation
 - **v0.1.1** - SQLite/S3DB compatibility with `Dict[str, str]` metadata, comprehensive examples
 - **v0.1.0** - Initial release with core IdeaInspiration model
 
