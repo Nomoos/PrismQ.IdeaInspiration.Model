@@ -43,11 +43,13 @@ class IdeaInspiration:
         source_id: Optional unique identifier from the source platform
         source_url: Optional URL to the original content
         score: Optional numerical score value for the content
-        category: Optional category classification for the content
-        score_detail: Category-specific score multipliers
-                      (e.g., {'US': 250, 'woman': 150})
-        category_flags: Category flavor strength ratings 0-100
-                        (e.g., {'tech': 85, 'business': 60})
+        category: Optional primary category classification for the content
+        subcategory_relevance: Relevance scores for secondary categories/subcategories
+                               (e.g., {'true_crime': 92, 'psychological_thriller': 81, 
+                               'mystery': 88, 'horror': 75})
+        contextual_category_scores: Contextual performance scores as percentages of base
+                                    for different contexts (e.g., {'language:english': 145,
+                                    'region:us': 160, 'age:18-24': 142, 'gender:female': 135})
 
     Example:
         >>> idea = IdeaInspiration(
@@ -69,8 +71,8 @@ class IdeaInspiration:
     source_url: Optional[str] = None
     score: Optional[int] = None
     category: Optional[str] = None
-    score_detail: Dict[str, int] = field(default_factory=dict)
-    category_flags: Dict[str, int] = field(default_factory=dict)
+    subcategory_relevance: Dict[str, int] = field(default_factory=dict)
+    contextual_category_scores: Dict[str, int] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert IdeaInspiration to dictionary representation.
@@ -113,8 +115,8 @@ class IdeaInspiration:
             source_url=data.get("source_url"),
             score=data.get("score"),
             category=data.get("category"),
-            score_detail=data.get("score_detail", {}),
-            category_flags=data.get("category_flags", {}),
+            subcategory_relevance=data.get("subcategory_relevance", {}),
+            contextual_category_scores=data.get("contextual_category_scores", {}),
         )
 
     @classmethod
@@ -129,8 +131,8 @@ class IdeaInspiration:
         source_url: Optional[str] = None,
         score: Optional[int] = None,
         category: Optional[str] = None,
-        score_detail: Optional[Dict[str, int]] = None,
-        category_flags: Optional[Dict[str, int]] = None,
+        subcategory_relevance: Optional[Dict[str, int]] = None,
+        contextual_category_scores: Optional[Dict[str, int]] = None,
     ) -> "IdeaInspiration":
         """Create IdeaInspiration from text content.
 
@@ -143,9 +145,9 @@ class IdeaInspiration:
             source_id: Optional source identifier
             source_url: Optional source URL
             score: Optional numerical score value
-            category: Optional category classification
-            score_detail: Optional category-specific score multipliers
-            category_flags: Optional category flavor strength ratings (0-100)
+            category: Optional primary category classification
+            subcategory_relevance: Optional relevance scores for subcategories
+            contextual_category_scores: Optional contextual scores (language, region, age, gender)
 
         Returns:
             IdeaInspiration instance with ContentType.TEXT
@@ -161,8 +163,8 @@ class IdeaInspiration:
             source_url=source_url,
             score=score,
             category=category,
-            score_detail=score_detail or {},
-            category_flags=category_flags or {},
+            subcategory_relevance=subcategory_relevance or {},
+            contextual_category_scores=contextual_category_scores or {},
         )
 
     @classmethod
@@ -177,8 +179,8 @@ class IdeaInspiration:
         source_url: Optional[str] = None,
         score: Optional[int] = None,
         category: Optional[str] = None,
-        score_detail: Optional[Dict[str, int]] = None,
-        category_flags: Optional[Dict[str, int]] = None,
+        subcategory_relevance: Optional[Dict[str, int]] = None,
+        contextual_category_scores: Optional[Dict[str, int]] = None,
     ) -> "IdeaInspiration":
         """Create IdeaInspiration from video content with subtitles.
 
@@ -192,9 +194,9 @@ class IdeaInspiration:
             source_id: Optional video identifier
             source_url: Optional video URL
             score: Optional numerical score value
-            category: Optional category classification
-            score_detail: Optional category-specific score multipliers
-            category_flags: Optional category flavor strength ratings (0-100)
+            category: Optional primary category classification
+            subcategory_relevance: Optional relevance scores for subcategories
+            contextual_category_scores: Optional contextual scores (language, region, age, gender)
 
         Returns:
             IdeaInspiration instance with ContentType.VIDEO
@@ -210,8 +212,8 @@ class IdeaInspiration:
             source_url=source_url,
             score=score,
             category=category,
-            score_detail=score_detail or {},
-            category_flags=category_flags or {},
+            subcategory_relevance=subcategory_relevance or {},
+            contextual_category_scores=contextual_category_scores or {},
         )
 
     @classmethod
@@ -226,8 +228,8 @@ class IdeaInspiration:
         source_url: Optional[str] = None,
         score: Optional[int] = None,
         category: Optional[str] = None,
-        score_detail: Optional[Dict[str, int]] = None,
-        category_flags: Optional[Dict[str, int]] = None,
+        subcategory_relevance: Optional[Dict[str, int]] = None,
+        contextual_category_scores: Optional[Dict[str, int]] = None,
     ) -> "IdeaInspiration":
         """Create IdeaInspiration from audio content with transcription.
 
@@ -241,9 +243,9 @@ class IdeaInspiration:
             source_id: Optional audio identifier
             source_url: Optional audio URL
             score: Optional numerical score value
-            category: Optional category classification
-            score_detail: Optional category-specific score multipliers
-            category_flags: Optional category flavor strength ratings (0-100)
+            category: Optional primary category classification
+            subcategory_relevance: Optional relevance scores for subcategories
+            contextual_category_scores: Optional contextual scores (language, region, age, gender)
 
         Returns:
             IdeaInspiration instance with ContentType.AUDIO
@@ -259,8 +261,8 @@ class IdeaInspiration:
             source_url=source_url,
             score=score,
             category=category,
-            score_detail=score_detail or {},
-            category_flags=category_flags or {},
+            subcategory_relevance=subcategory_relevance or {},
+            contextual_category_scores=contextual_category_scores or {},
         )
 
     def __repr__(self) -> str:

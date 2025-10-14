@@ -394,21 +394,21 @@ class TestIdeaInspirationScoringFields:
         idea = IdeaInspiration(title="Test Article", category="technology")
         assert idea.category == "technology"
 
-    def test_create_with_score_detail(self):
-        """Test creating IdeaInspiration with score_detail field."""
-        score_detail = {"US": 250, "woman": 150, "tech": 180}
-        idea = IdeaInspiration(title="Test Article", score_detail=score_detail)
-        assert idea.score_detail == score_detail
-        assert idea.score_detail["US"] == 250
-        assert idea.score_detail["woman"] == 150
+    def test_create_with_subcategory_relevance(self):
+        """Test creating IdeaInspiration with subcategory_relevance field."""
+        subcategory_relevance = {"US": 250, "woman": 150, "tech": 180}
+        idea = IdeaInspiration(title="Test Article", subcategory_relevance=subcategory_relevance)
+        assert idea.subcategory_relevance == subcategory_relevance
+        assert idea.subcategory_relevance["US"] == 250
+        assert idea.subcategory_relevance["woman"] == 150
 
-    def test_create_with_category_flags(self):
-        """Test creating IdeaInspiration with category_flags field."""
-        category_flags = {"tech": 85, "business": 60, "science": 75}
-        idea = IdeaInspiration(title="Test Article", category_flags=category_flags)
-        assert idea.category_flags == category_flags
-        assert idea.category_flags["tech"] == 85
-        assert 0 <= idea.category_flags["business"] <= 100
+    def test_create_with_contextual_category_scores(self):
+        """Test creating IdeaInspiration with contextual_category_scores field."""
+        contextual_category_scores = {"tech": 85, "business": 60, "science": 75}
+        idea = IdeaInspiration(title="Test Article", contextual_category_scores=contextual_category_scores)
+        assert idea.contextual_category_scores == contextual_category_scores
+        assert idea.contextual_category_scores["tech"] == 85
+        assert 0 <= idea.contextual_category_scores["business"] <= 100
 
     def test_create_with_all_scoring_fields(self):
         """Test creating IdeaInspiration with all scoring fields."""
@@ -418,21 +418,21 @@ class TestIdeaInspirationScoringFields:
             content="Article content",
             score=90,
             category="technology",
-            score_detail={"US": 250, "Europe": 180},
-            category_flags={"tech": 95, "innovation": 88},
+            subcategory_relevance={"US": 250, "Europe": 180},
+            contextual_category_scores={"tech": 95, "innovation": 88},
         )
         assert idea.score == 90
         assert idea.category == "technology"
-        assert idea.score_detail["US"] == 250
-        assert idea.category_flags["tech"] == 95
+        assert idea.subcategory_relevance["US"] == 250
+        assert idea.contextual_category_scores["tech"] == 95
 
     def test_default_values_for_scoring_fields(self):
         """Test default values for scoring fields."""
         idea = IdeaInspiration(title="Test Article")
         assert idea.score is None
         assert idea.category is None
-        assert idea.score_detail == {}
-        assert idea.category_flags == {}
+        assert idea.subcategory_relevance == {}
+        assert idea.contextual_category_scores == {}
 
     def test_from_text_with_scoring_fields(self):
         """Test creating from text with scoring fields."""
@@ -441,13 +441,13 @@ class TestIdeaInspirationScoringFields:
             text_content="Content",
             score=75,
             category="education",
-            score_detail={"US": 200, "student": 120},
-            category_flags={"learning": 90, "tutorial": 85},
+            subcategory_relevance={"US": 200, "student": 120},
+            contextual_category_scores={"learning": 90, "tutorial": 85},
         )
         assert idea.score == 75
         assert idea.category == "education"
-        assert idea.score_detail["student"] == 120
-        assert idea.category_flags["learning"] == 90
+        assert idea.subcategory_relevance["student"] == 120
+        assert idea.contextual_category_scores["learning"] == 90
 
     def test_from_video_with_scoring_fields(self):
         """Test creating from video with scoring fields."""
@@ -456,13 +456,13 @@ class TestIdeaInspirationScoringFields:
             subtitle_text="Subtitles",
             score=88,
             category="entertainment",
-            score_detail={"US": 300, "viral": 250},
-            category_flags={"comedy": 95, "education": 70},
+            subcategory_relevance={"US": 300, "viral": 250},
+            contextual_category_scores={"comedy": 95, "education": 70},
         )
         assert idea.score == 88
         assert idea.category == "entertainment"
-        assert idea.score_detail["viral"] == 250
-        assert idea.category_flags["comedy"] == 95
+        assert idea.subcategory_relevance["viral"] == 250
+        assert idea.contextual_category_scores["comedy"] == 95
 
     def test_from_audio_with_scoring_fields(self):
         """Test creating from audio with scoring fields."""
@@ -471,13 +471,13 @@ class TestIdeaInspirationScoringFields:
             transcription="Audio transcription",
             score=82,
             category="news",
-            score_detail={"US": 220, "premium": 180},
-            category_flags={"politics": 80, "current_events": 90},
+            subcategory_relevance={"US": 220, "premium": 180},
+            contextual_category_scores={"politics": 80, "current_events": 90},
         )
         assert idea.score == 82
         assert idea.category == "news"
-        assert idea.score_detail["premium"] == 180
-        assert idea.category_flags["current_events"] == 90
+        assert idea.subcategory_relevance["premium"] == 180
+        assert idea.contextual_category_scores["current_events"] == 90
 
     def test_serialization_with_scoring_fields(self):
         """Test serialization includes scoring fields."""
@@ -485,15 +485,15 @@ class TestIdeaInspirationScoringFields:
             title="Test Article",
             score=85,
             category="tech",
-            score_detail={"US": 250},
-            category_flags={"innovation": 90},
+            subcategory_relevance={"US": 250},
+            contextual_category_scores={"innovation": 90},
         )
 
         data = idea.to_dict()
         assert data["score"] == 85
         assert data["category"] == "tech"
-        assert data["score_detail"] == {"US": 250}
-        assert data["category_flags"] == {"innovation": 90}
+        assert data["subcategory_relevance"] == {"US": 250}
+        assert data["contextual_category_scores"] == {"innovation": 90}
 
     def test_deserialization_with_scoring_fields(self):
         """Test deserialization includes scoring fields."""
@@ -501,15 +501,15 @@ class TestIdeaInspirationScoringFields:
             "title": "Test Article",
             "score": 92,
             "category": "science",
-            "score_detail": {"Europe": 180, "research": 200},
-            "category_flags": {"breakthrough": 95, "innovation": 88},
+            "subcategory_relevance": {"Europe": 180, "research": 200},
+            "contextual_category_scores": {"breakthrough": 95, "innovation": 88},
         }
 
         idea = IdeaInspiration.from_dict(data)
         assert idea.score == 92
         assert idea.category == "science"
-        assert idea.score_detail == {"Europe": 180, "research": 200}
-        assert idea.category_flags == {"breakthrough": 95, "innovation": 88}
+        assert idea.subcategory_relevance == {"Europe": 180, "research": 200}
+        assert idea.contextual_category_scores == {"breakthrough": 95, "innovation": 88}
 
     def test_round_trip_with_scoring_fields(self):
         """Test round-trip serialization with scoring fields."""
@@ -519,8 +519,8 @@ class TestIdeaInspirationScoringFields:
             content="Content",
             score=78,
             category="business",
-            score_detail={"US": 260, "enterprise": 190},
-            category_flags={"finance": 85, "strategy": 80},
+            subcategory_relevance={"US": 260, "enterprise": 190},
+            contextual_category_scores={"finance": 85, "strategy": 80},
         )
 
         data = original.to_dict()
@@ -528,8 +528,8 @@ class TestIdeaInspirationScoringFields:
 
         assert restored.score == original.score
         assert restored.category == original.category
-        assert restored.score_detail == original.score_detail
-        assert restored.category_flags == original.category_flags
+        assert restored.subcategory_relevance == original.subcategory_relevance
+        assert restored.contextual_category_scores == original.contextual_category_scores
 
 
 if __name__ == "__main__":

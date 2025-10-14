@@ -127,33 +127,44 @@ from prismq.idea.model import IdeaInspiration
 
 # Create with scoring and category information
 idea = IdeaInspiration.from_text(
-    title="AI in Healthcare",
-    text_content="Artificial intelligence is transforming healthcare...",
-    keywords=["AI", "healthcare", "technology"],
+    title="True Crime Documentary",
+    text_content="A gripping investigation into...",
+    keywords=["true crime", "mystery", "thriller"],
     score=85,  # Overall score
-    category="technology",  # Category classification
-    score_detail={
-        "US": 250,      # 250% performance vs standard for US market
-        "woman": 150,   # 150% performance for women demographic
-        "tech": 180     # 180% performance in tech category
+    category="true_crime",  # Primary category
+    subcategory_relevance={
+        "true_crime": 92,             # Strong true crime relevance
+        "psychological_thriller": 81,  # Strong psychological thriller elements
+        "mystery": 88,                 # Strong mystery elements
+        "horror": 75,                  # Moderate horror elements
+        "drama": 69,                   # Some drama elements
+        "romance": 34                  # Minimal romance elements
     },
-    category_flags={
-        "innovation": 95,  # Strong innovation flavor (0-100)
-        "healthcare": 88,  # Strong healthcare flavor
-        "AI": 92          # Strong AI flavor
+    contextual_category_scores={
+        "language:english": 145,   # 145% of base for English
+        "language:spanish": 95,    # 95% of base for Spanish
+        "language:german": 72,     # 72% of base for German
+        "region:us": 160,          # 160% of base for US
+        "region:latam": 110,       # 110% of base for Latin America
+        "region:europe": 87,       # 87% of base for Europe
+        "age:13-17": 125,          # 125% of base for ages 13-17
+        "age:18-24": 142,          # 142% of base for ages 18-24
+        "age:25-34": 98,           # 98% of base for ages 25-34
+        "gender:female": 135,      # 135% of base for female
+        "gender:male": 76          # 76% of base for male
     }
 )
 
 # Access scoring fields
 print(f"Score: {idea.score}")
 print(f"Category: {idea.category}")
-print(f"US market multiplier: {idea.score_detail['US']}%")
-print(f"Innovation strength: {idea.category_flags['innovation']}/100")
+print(f"True crime relevance: {idea.subcategory_relevance['true_crime']}")
+print(f"English context score: {idea.contextual_category_scores['language:english']}%")
 ```
 
-**Score Detail**: Category-specific score multipliers indicating performance percentages. For example, `{"US": 250}` means content performs 250% better in the US market compared to industry standard.
+**Subcategory Relevance**: Relevance scores (0-100) for secondary categories/subcategories showing how strongly content aligns with each subcategory.
 
-**Category Flags**: Flavor strength ratings on a 0-100 scale indicating how strongly the content aligns with specific categories or themes.
+**Contextual Category Scores**: Contextual performance scores as percentages of base score for different contexts (language, region, age, gender). Used by the Builder for score calculation.
 
 ## Data Model
 
@@ -172,9 +183,9 @@ The core data model with the following fields:
 | `source_id` | `Optional[str]` | Unique identifier from source platform |
 | `source_url` | `Optional[str]` | URL to original content |
 | `score` | `Optional[int]` | Numerical score value for content evaluation |
-| `category` | `Optional[str]` | Category classification for the content |
-| `score_detail` | `Dict[str, int]` | Category-specific score multipliers (e.g., `{'US': 250, 'woman': 150}`) - percentages for overperformers |
-| `category_flags` | `Dict[str, int]` | Category flavor strength ratings 0-100 (e.g., `{'tech': 85, 'business': 60}`) |
+| `category` | `Optional[str]` | Primary category classification for the content |
+| `subcategory_relevance` | `Dict[str, int]` | Relevance scores for subcategories (e.g., `{'true_crime': 92, 'mystery': 88, 'horror': 75}`) |
+| `contextual_category_scores` | `Dict[str, int]` | Contextual performance scores as % of base (e.g., `{'language:english': 145, 'region:us': 160, 'age:18-24': 142}`) |
 
 ### ContentType
 
