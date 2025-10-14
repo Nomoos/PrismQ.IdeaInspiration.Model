@@ -12,15 +12,15 @@ def example_basic_creation():
     print("=" * 60)
     print("Example 1: Basic Creation")
     print("=" * 60)
-    
+
     idea = IdeaInspiration(
         title="Introduction to Machine Learning",
         description="A comprehensive guide to ML basics",
         content="Machine learning is a subset of artificial intelligence...",
         keywords=["machine learning", "AI", "tutorial"],
-        source_type=ContentType.TEXT
+        source_type=ContentType.TEXT,
     )
-    
+
     print(f"Title: {idea.title}")
     print(f"Description: {idea.description}")
     print(f"Content Length: {len(idea.content)} characters")
@@ -34,16 +34,16 @@ def example_from_text():
     print("=" * 60)
     print("Example 2: Creating from Text")
     print("=" * 60)
-    
+
     idea = IdeaInspiration.from_text(
         title="The Future of Quantum Computing",
         description="Exploring the potential of quantum computers",
         text_content="Quantum computing represents a paradigm shift...",
         keywords=["quantum", "computing", "technology"],
         metadata={"author": "Dr. Jane Smith", "date": "2025-01-15"},
-        source_url="https://example.com/quantum-article"
+        source_url="https://example.com/quantum-article",
     )
-    
+
     print(f"Title: {idea.title}")
     print(f"Author: {idea.metadata.get('author', 'Unknown')}")
     print(f"URL: {idea.source_url}")
@@ -56,20 +56,16 @@ def example_from_video():
     print("=" * 60)
     print("Example 3: Creating from Video")
     print("=" * 60)
-    
+
     idea = IdeaInspiration.from_video(
         title="Python Tutorial for Beginners",
         description="Learn Python programming in 30 minutes",
         subtitle_text="Welcome to this Python tutorial. Today we'll cover variables, loops, and functions...",
         keywords=["python", "tutorial", "programming", "beginners"],
-        metadata={
-            "views": 500000,
-            "likes": 25000,
-            "duration": 1800  # seconds
-        },
-        source_id="video-abc-123"
+        metadata={"views": 500000, "likes": 25000, "duration": 1800},  # seconds
+        source_id="video-abc-123",
     )
-    
+
     print(f"Title: {idea.title}")
     print(f"Views: {idea.metadata['views']:,}")
     print(f"Likes: {idea.metadata['likes']:,}")
@@ -83,15 +79,15 @@ def example_serialization():
     print("=" * 60)
     print("Example 4: Serialization")
     print("=" * 60)
-    
+
     # Create an idea
     original = IdeaInspiration.from_text(
         title="Blockchain Technology Explained",
         description="Understanding blockchain and its applications",
         text_content="Blockchain is a distributed ledger technology...",
-        keywords=["blockchain", "cryptocurrency", "technology"]
+        keywords=["blockchain", "cryptocurrency", "technology"],
     )
-    
+
     # Serialize to dictionary
     data = original.to_dict()
     print("Serialized to dictionary:")
@@ -102,7 +98,7 @@ def example_serialization():
             print(f"  {key}: {value}")
         elif value:
             print(f"  {key}: {value}")
-    
+
     # Deserialize back
     restored = IdeaInspiration.from_dict(data)
     print(f"\nDeserialized successfully!")
@@ -117,21 +113,16 @@ def example_from_audio():
     print("=" * 60)
     print("Example 5: Creating from Audio")
     print("=" * 60)
-    
+
     idea = IdeaInspiration.from_audio(
         title="PrismQ Podcast - Episode 15: AI in 2025",
         description="Discussion about the current state of AI",
         transcription="Welcome to the PrismQ Podcast. Today we're discussing artificial intelligence in 2025...",
         keywords=["podcast", "AI", "technology", "2025"],
-        metadata={
-            "duration": 3600,
-            "host": "John Doe",
-            "guest": "Dr. Jane Smith",
-            "episode": 15
-        },
-        source_id="podcast-ep15"
+        metadata={"duration": 3600, "host": "John Doe", "guest": "Dr. Jane Smith", "episode": 15},
+        source_id="podcast-ep15",
     )
-    
+
     print(f"Title: {idea.title}")
     print(f"Episode: {idea.metadata['episode']}")
     print(f"Host: {idea.metadata['host']}")
@@ -146,28 +137,23 @@ def example_content_types():
     print("=" * 60)
     print("Example 6: Content Type Comparison")
     print("=" * 60)
-    
-    text_idea = IdeaInspiration.from_text(
-        title="Text Article",
-        text_content="Article content..."
-    )
-    
+
+    text_idea = IdeaInspiration.from_text(title="Text Article", text_content="Article content...")
+
     video_idea = IdeaInspiration.from_video(
-        title="Video Tutorial",
-        subtitle_text="Video subtitles..."
+        title="Video Tutorial", subtitle_text="Video subtitles..."
     )
-    
+
     audio_idea = IdeaInspiration.from_audio(
-        title="Podcast Episode",
-        transcription="Audio transcription..."
+        title="Podcast Episode", transcription="Audio transcription..."
     )
-    
+
     ideas = [text_idea, video_idea, audio_idea]
-    
+
     print("Content Type Summary:")
     for idea in ideas:
         print(f"  {idea.title:20} -> {idea.source_type.value:8}")
-    
+
     print(f"\nAvailable ContentType values:")
     for content_type in ContentType:
         print(f"  - {content_type.value}")
@@ -183,14 +169,14 @@ def main():
     print("║" + " " * 58 + "║")
     print("╚" + "=" * 58 + "╝")
     print("\n")
-    
+
     example_basic_creation()
     example_from_text()
     example_from_video()
     example_serialization()
     example_from_audio()
     example_content_types()
-    
+
     print("=" * 60)
     print("All examples completed successfully!")
     print("=" * 60)

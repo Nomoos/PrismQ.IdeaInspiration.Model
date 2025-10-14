@@ -16,6 +16,7 @@ from enum import Enum
 
 class ContentType(Enum):
     """Type of content source."""
+
     TEXT = "text"
     VIDEO = "video"
     AUDIO = "audio"
@@ -25,12 +26,12 @@ class ContentType(Enum):
 @dataclass
 class IdeaInspiration:
     """Core data model for content ideas across different media types.
-    
+
     This model represents content ideas that can originate from text articles,
     video content (with subtitles/transcriptions), or audio content (with
     transcriptions). It provides a unified structure for processing and analyzing
     content across the PrismQ ecosystem.
-    
+
     Attributes:
         title: The title or headline of the content
         description: A brief description or summary
@@ -40,7 +41,7 @@ class IdeaInspiration:
         metadata: Additional source-specific metadata
         source_id: Optional unique identifier from the source platform
         source_url: Optional URL to the original content
-    
+
     Example:
         >>> idea = IdeaInspiration(
         ...     title="Introduction to Python",
@@ -50,7 +51,7 @@ class IdeaInspiration:
         ...     source_type=ContentType.TEXT
         ... )
     """
-    
+
     title: str
     description: str = ""
     content: str = ""
@@ -59,29 +60,29 @@ class IdeaInspiration:
     metadata: Dict[str, Any] = field(default_factory=dict)
     source_id: Optional[str] = None
     source_url: Optional[str] = None
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert IdeaInspiration to dictionary representation.
-        
+
         Returns:
             Dictionary containing all fields with ContentType converted to string
         """
         data = asdict(self)
-        data['source_type'] = self.source_type.value
+        data["source_type"] = self.source_type.value
         return data
-    
+
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'IdeaInspiration':
+    def from_dict(cls, data: Dict[str, Any]) -> "IdeaInspiration":
         """Create IdeaInspiration from dictionary.
-        
+
         Args:
             data: Dictionary containing IdeaInspiration fields
-            
+
         Returns:
             IdeaInspiration instance
         """
         # Handle source_type conversion
-        source_type_value = data.get('source_type', 'unknown')
+        source_type_value = data.get("source_type", "unknown")
         if isinstance(source_type_value, str):
             try:
                 source_type = ContentType(source_type_value)
@@ -89,18 +90,18 @@ class IdeaInspiration:
                 source_type = ContentType.UNKNOWN
         else:
             source_type = source_type_value
-        
+
         return cls(
-            title=data.get('title', ''),
-            description=data.get('description', ''),
-            content=data.get('content', ''),
-            keywords=data.get('keywords', []),
+            title=data.get("title", ""),
+            description=data.get("description", ""),
+            content=data.get("content", ""),
+            keywords=data.get("keywords", []),
             source_type=source_type,
-            metadata=data.get('metadata', {}),
-            source_id=data.get('source_id'),
-            source_url=data.get('source_url')
+            metadata=data.get("metadata", {}),
+            source_id=data.get("source_id"),
+            source_url=data.get("source_url"),
         )
-    
+
     @classmethod
     def from_text(
         cls,
@@ -110,10 +111,10 @@ class IdeaInspiration:
         keywords: Optional[List[str]] = None,
         metadata: Optional[Dict[str, Any]] = None,
         source_id: Optional[str] = None,
-        source_url: Optional[str] = None
-    ) -> 'IdeaInspiration':
+        source_url: Optional[str] = None,
+    ) -> "IdeaInspiration":
         """Create IdeaInspiration from text content.
-        
+
         Args:
             title: Article or post title
             description: Brief description or summary
@@ -122,7 +123,7 @@ class IdeaInspiration:
             metadata: Additional metadata
             source_id: Optional source identifier
             source_url: Optional source URL
-            
+
         Returns:
             IdeaInspiration instance with ContentType.TEXT
         """
@@ -134,9 +135,9 @@ class IdeaInspiration:
             source_type=ContentType.TEXT,
             metadata=metadata or {},
             source_id=source_id,
-            source_url=source_url
+            source_url=source_url,
         )
-    
+
     @classmethod
     def from_video(
         cls,
@@ -146,10 +147,10 @@ class IdeaInspiration:
         keywords: Optional[List[str]] = None,
         metadata: Optional[Dict[str, Any]] = None,
         source_id: Optional[str] = None,
-        source_url: Optional[str] = None
-    ) -> 'IdeaInspiration':
+        source_url: Optional[str] = None,
+    ) -> "IdeaInspiration":
         """Create IdeaInspiration from video content with subtitles.
-        
+
         Args:
             title: Video title
             description: Video description
@@ -158,7 +159,7 @@ class IdeaInspiration:
             metadata: Additional video metadata (views, likes, etc.)
             source_id: Optional video identifier
             source_url: Optional video URL
-            
+
         Returns:
             IdeaInspiration instance with ContentType.VIDEO
         """
@@ -170,9 +171,9 @@ class IdeaInspiration:
             source_type=ContentType.VIDEO,
             metadata=metadata or {},
             source_id=source_id,
-            source_url=source_url
+            source_url=source_url,
         )
-    
+
     @classmethod
     def from_audio(
         cls,
@@ -182,10 +183,10 @@ class IdeaInspiration:
         keywords: Optional[List[str]] = None,
         metadata: Optional[Dict[str, Any]] = None,
         source_id: Optional[str] = None,
-        source_url: Optional[str] = None
-    ) -> 'IdeaInspiration':
+        source_url: Optional[str] = None,
+    ) -> "IdeaInspiration":
         """Create IdeaInspiration from audio content with transcription.
-        
+
         Args:
             title: Audio title or episode name
             description: Audio description
@@ -194,7 +195,7 @@ class IdeaInspiration:
             metadata: Additional audio metadata
             source_id: Optional audio identifier
             source_url: Optional audio URL
-            
+
         Returns:
             IdeaInspiration instance with ContentType.AUDIO
         """
@@ -206,11 +207,9 @@ class IdeaInspiration:
             source_type=ContentType.AUDIO,
             metadata=metadata or {},
             source_id=source_id,
-            source_url=source_url
+            source_url=source_url,
         )
-    
 
-    
     def __repr__(self) -> str:
         """String representation of IdeaInspiration."""
         return (

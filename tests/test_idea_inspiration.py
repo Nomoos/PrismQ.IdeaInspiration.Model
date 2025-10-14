@@ -15,7 +15,7 @@ class TestIdeaInspirationBasic:
             content="Test Content",
             keywords=["test", "example"],
         )
-        
+
         assert idea.title == "Test Title"
         assert idea.description == "Test Description"
         assert idea.content == "Test Content"
@@ -28,7 +28,7 @@ class TestIdeaInspirationBasic:
     def test_create_with_defaults(self):
         """Test creating IdeaInspiration with default values."""
         idea = IdeaInspiration(title="Test Title")
-        
+
         assert idea.title == "Test Title"
         assert idea.description == ""
         assert idea.content == ""
@@ -47,9 +47,9 @@ class TestIdeaInspirationBasic:
             source_type=ContentType.TEXT,
             metadata=metadata,
             source_id="test-id-123",
-            source_url="https://example.com/content"
+            source_url="https://example.com/content",
         )
-        
+
         assert idea.title == "Test Title"
         assert idea.description == "Test Description"
         assert idea.content == "Test Content"
@@ -73,11 +73,11 @@ class TestIdeaInspirationSerialization:
             source_type=ContentType.TEXT,
             metadata={"key": "value"},
             source_id="test-id",
-            source_url="https://example.com"
+            source_url="https://example.com",
         )
-        
+
         data = idea.to_dict()
-        
+
         assert isinstance(data, dict)
         assert data["title"] == "Test Title"
         assert data["description"] == "Test Description"
@@ -98,11 +98,11 @@ class TestIdeaInspirationSerialization:
             "source_type": "video",
             "metadata": {"key": "value"},
             "source_id": "test-id",
-            "source_url": "https://example.com"
+            "source_url": "https://example.com",
         }
-        
+
         idea = IdeaInspiration.from_dict(data)
-        
+
         assert idea.title == "Test Title"
         assert idea.description == "Test Description"
         assert idea.content == "Test Content"
@@ -116,7 +116,7 @@ class TestIdeaInspirationSerialization:
         """Test creating IdeaInspiration from dictionary with missing fields."""
         data = {"title": "Test Title"}
         idea = IdeaInspiration.from_dict(data)
-        
+
         assert idea.title == "Test Title"
         assert idea.description == ""
         assert idea.content == ""
@@ -125,12 +125,9 @@ class TestIdeaInspirationSerialization:
 
     def test_from_dict_with_invalid_source_type(self):
         """Test handling invalid source_type in from_dict."""
-        data = {
-            "title": "Test Title",
-            "source_type": "invalid_type"
-        }
+        data = {"title": "Test Title", "source_type": "invalid_type"}
         idea = IdeaInspiration.from_dict(data)
-        
+
         assert idea.source_type == ContentType.UNKNOWN
 
     def test_round_trip_serialization(self):
@@ -143,12 +140,12 @@ class TestIdeaInspirationSerialization:
             source_type=ContentType.AUDIO,
             metadata={"key": "value"},
             source_id="test-id",
-            source_url="https://example.com"
+            source_url="https://example.com",
         )
-        
+
         data = original.to_dict()
         restored = IdeaInspiration.from_dict(data)
-        
+
         assert restored.title == original.title
         assert restored.description == original.description
         assert restored.content == original.content
@@ -171,9 +168,9 @@ class TestIdeaInspirationFactoryMethods:
             keywords=["article", "text"],
             metadata={"author": "John Doe"},
             source_id="article-123",
-            source_url="https://example.com/article"
+            source_url="https://example.com/article",
         )
-        
+
         assert idea.title == "Article Title"
         assert idea.description == "Article description"
         assert idea.content == "Full article text content"
@@ -186,7 +183,7 @@ class TestIdeaInspirationFactoryMethods:
     def test_from_text_minimal(self):
         """Test creating IdeaInspiration from text with minimal fields."""
         idea = IdeaInspiration.from_text(title="Minimal Article")
-        
+
         assert idea.title == "Minimal Article"
         assert idea.description == ""
         assert idea.content == ""
@@ -202,9 +199,9 @@ class TestIdeaInspirationFactoryMethods:
             keywords=["video", "tutorial"],
             metadata={"views": 1000, "likes": 50},
             source_id="video-123",
-            source_url="https://example.com/video"
+            source_url="https://example.com/video",
         )
-        
+
         assert idea.title == "Video Title"
         assert idea.description == "Video description"
         assert idea.content == "Video subtitles and transcription"
@@ -223,9 +220,9 @@ class TestIdeaInspirationFactoryMethods:
             keywords=["podcast", "audio"],
             metadata={"duration": 3600},
             source_id="audio-123",
-            source_url="https://example.com/podcast"
+            source_url="https://example.com/podcast",
         )
-        
+
         assert idea.title == "Podcast Episode"
         assert idea.description == "Episode description"
         assert idea.content == "Full audio transcription"
@@ -264,11 +261,8 @@ class TestIdeaInspirationRepr:
 
     def test_repr_short_title(self):
         """Test __repr__ with short title."""
-        idea = IdeaInspiration(
-            title="Short Title",
-            keywords=["test", "example"]
-        )
-        
+        idea = IdeaInspiration(title="Short Title", keywords=["test", "example"])
+
         repr_str = repr(idea)
         assert "Short Title" in repr_str
         assert "unknown" in repr_str
@@ -278,7 +272,7 @@ class TestIdeaInspirationRepr:
         """Test __repr__ with long title (truncated)."""
         long_title = "A" * 100
         idea = IdeaInspiration(title=long_title)
-        
+
         repr_str = repr(idea)
         assert len(repr_str) < len(long_title) + 100  # Truncated
         assert "..." in repr_str

@@ -6,10 +6,10 @@ the PrismQ ecosystem for content processing, scoring, and classification.
 Main exports:
     - IdeaInspiration: Core data model for content ideas
     - ContentType: Enum for content source types (text/video/audio)
-    
+
 Example:
     >>> from prismq.idea.model import IdeaInspiration, ContentType
-    >>> 
+    >>>
     >>> # Create from text
     >>> idea = IdeaInspiration.from_text(
     ...     title="My Article",
@@ -17,7 +17,7 @@ Example:
     ...     text_content="Full article text...",
     ...     keywords=["python", "tutorial"]
     ... )
-    >>> 
+    >>>
     >>> # Create from video
     >>> idea = IdeaInspiration.from_video(
     ...     title="Video Title",
