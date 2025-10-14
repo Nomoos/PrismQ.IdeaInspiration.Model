@@ -16,21 +16,21 @@ This release adds comprehensive scoring and categorization capabilities to the I
 - Optional field, defaults to `None`
 - Example: `category="technology"`
 
-### 3. Score Detail (`Dict[str, int]`)
-- Audience fit scores showing how well content fits different audiences
-- Used in score calculation by the Builder module
+### 3. Subcategory Relevance (`Dict[str, int]`)
+- Relevance scores (0-100) for secondary categories/subcategories
+- Shows how strongly content aligns with each subcategory
+- Empty dict by default
+- Example: `{"true_crime": 92, "psychological_thriller": 81, "mystery": 88, "horror": 75}`
+
+### 4. Contextual Category Scores (`Dict[str, int]`)
+- Contextual performance scores as percentages of base score
+- Used in score calculation by the Builder module for different contexts
 - Empty dict by default
 - Example use cases:
-  - Demographics: `{"woman": 65, "man": 30}`
-  - Age groups: `{"10-15": 150, "15-20": 89}`
-  - Regions: `{"us": 65, "europe": 75}`
-  - Languages: `{"english": 110, "spanish": 45}`
-
-### 4. Category Flags (`Dict[str, int]`)
-- Secondary category tags with strength scores (0-100)
-- Indicates how strongly content aligns with each category
-- Empty dict by default
-- Example: `{"Scary": 100, "Action": 75, "Drama": 60}`
+  - Languages: `{"language:english": 145, "language:spanish": 95}`
+  - Regions: `{"region:us": 160, "region:latam": 110}`
+  - Age groups: `{"age:13-17": 125, "age:18-24": 142}`
+  - Gender: `{"gender:female": 135, "gender:male": 76}`
 
 ## API Changes
 
@@ -64,17 +64,17 @@ class IdeaInspiration:
     source_url: Optional[str] = None
     score: Optional[int] = None  # NEW
     category: Optional[str] = None  # NEW
-    score_detail: Dict[str, int] = field(default_factory=dict)  # NEW
-    category_flags: Dict[str, int] = field(default_factory=dict)  # NEW
+    subcategory_relevance: Dict[str, int] = field(default_factory=dict)  # NEW
+    contextual_category_scores: Dict[str, int] = field(default_factory=dict)  # NEW
 ```
 
 ### Factory Method Updates
 
 All factory methods now support the new fields:
 
-- `IdeaInspiration.from_text()` - Added `score`, `category`, `score_detail`, `category_flags` parameters
-- `IdeaInspiration.from_video()` - Added `score`, `category`, `score_detail`, `category_flags` parameters
-- `IdeaInspiration.from_audio()` - Added `score`, `category`, `score_detail`, `category_flags` parameters
+- `IdeaInspiration.from_text()` - Added `score`, `category`, `subcategory_relevance`, `contextual_category_scores` parameters
+- `IdeaInspiration.from_video()` - Added `score`, `category`, `subcategory_relevance`, `contextual_category_scores` parameters
+- `IdeaInspiration.from_audio()` - Added `score`, `category`, `subcategory_relevance`, `contextual_category_scores` parameters
 
 ### Serialization Updates
 
@@ -93,34 +93,34 @@ idea = IdeaInspiration.from_text(
 )
 ```
 
-### Score Detail - Audience Fit
+### Subcategory Relevance - Secondary Category Scores
 ```python
 idea = IdeaInspiration.from_video(
-    title="Tech Startup Success Stories",
-    subtitle_text="Learn from entrepreneurs...",
+    title="True Crime Documentary",
+    subtitle_text="Investigation into...",
     score=90,
-    category="business",
-    score_detail={
-        "woman": 65,      # Audience fit for women
-        "man": 30,        # Audience fit for men
-        "10-15": 150,     # Audience fit for age 10-15
-        "us": 65,         # Audience fit for US region
-        "english": 110,   # Audience fit for English speakers
+    category="true_crime",
+    subcategory_relevance={
+        "true_crime": 92,             # Strong true crime relevance
+        "psychological_thriller": 81,  # Strong psychological thriller
+        "mystery": 88,                 # Strong mystery elements
+        "horror": 75,                  # Moderate horror elements
     }
 )
 ```
 
-### Category Flags - Secondary Categories
+### Contextual Category Scores - Performance by Context
 ```python
 idea = IdeaInspiration.from_audio(
-    title="Horror Story Podcast",
-    transcription="A dark tale unfolds...",
+    title="Mystery Podcast",
+    transcription="A perplexing case...",
     score=88,
-    category="Horror",
-    category_flags={
-        "Scary": 100,     # Fully scary content
-        "Suspense": 90,   # Very strong suspense
-        "Drama": 60,      # Moderate drama elements
+    category="mystery",
+    contextual_category_scores={
+        "language:english": 145,   # 145% of base for English
+        "region:us": 160,          # 160% of base for US
+        "age:18-24": 142,          # 142% of base for ages 18-24
+        "gender:female": 135,      # 135% of base for female
     }
 )
 ```

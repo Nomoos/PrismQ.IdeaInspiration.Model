@@ -127,37 +127,44 @@ from prismq.idea.model import IdeaInspiration
 
 # Create with scoring and category information
 idea = IdeaInspiration.from_text(
-    title="AI in Healthcare",
-    text_content="Artificial intelligence is transforming healthcare...",
-    keywords=["AI", "healthcare", "technology"],
+    title="True Crime Documentary",
+    text_content="A gripping investigation into...",
+    keywords=["true crime", "mystery", "thriller"],
     score=85,  # Overall score
-    category="technology",  # Primary category
-    score_detail={
-        "woman": 65,      # Audience fit for women
-        "man": 30,        # Audience fit for men
-        "10-15": 150,     # Audience fit for age 10-15
-        "15-20": 89,      # Audience fit for age 15-20
-        "us": 65,         # Audience fit for US region
-        "english": 110,   # Audience fit for English speakers
-        "spanish": 45     # Audience fit for Spanish speakers
+    category="true_crime",  # Primary category
+    subcategory_relevance={
+        "true_crime": 92,             # Strong true crime relevance
+        "psychological_thriller": 81,  # Strong psychological thriller elements
+        "mystery": 88,                 # Strong mystery elements
+        "horror": 75,                  # Moderate horror elements
+        "drama": 69,                   # Some drama elements
+        "romance": 34                  # Minimal romance elements
     },
-    category_flags={
-        "Scary": 100,     # Fully scary content
-        "Action": 75,     # Strong action elements
-        "Drama": 60       # Moderate drama elements
+    contextual_category_scores={
+        "language:english": 145,   # 145% of base for English
+        "language:spanish": 95,    # 95% of base for Spanish
+        "language:german": 72,     # 72% of base for German
+        "region:us": 160,          # 160% of base for US
+        "region:latam": 110,       # 110% of base for Latin America
+        "region:europe": 87,       # 87% of base for Europe
+        "age:13-17": 125,          # 125% of base for ages 13-17
+        "age:18-24": 142,          # 142% of base for ages 18-24
+        "age:25-34": 98,           # 98% of base for ages 25-34
+        "gender:female": 135,      # 135% of base for female
+        "gender:male": 76          # 76% of base for male
     }
 )
 
 # Access scoring fields
 print(f"Score: {idea.score}")
 print(f"Category: {idea.category}")
-print(f"Women audience fit: {idea.score_detail['woman']}")
-print(f"Scary strength: {idea.category_flags['Scary']}/100")
+print(f"True crime relevance: {idea.subcategory_relevance['true_crime']}")
+print(f"English context score: {idea.contextual_category_scores['language:english']}%")
 ```
 
-**Score Detail**: Audience fit scores showing how well the content fits different audiences (demographics, age groups, regions, languages, etc.). These are used in score calculation by the Builder.
+**Subcategory Relevance**: Relevance scores (0-100) for secondary categories/subcategories showing how strongly content aligns with each subcategory.
 
-**Category Flags**: Secondary category tags with strength scores (0-100) indicating how strongly the content aligns with each category.
+**Contextual Category Scores**: Contextual performance scores as percentages of base score for different contexts (language, region, age, gender). Used by the Builder for score calculation.
 
 ## Data Model
 
@@ -177,8 +184,8 @@ The core data model with the following fields:
 | `source_url` | `Optional[str]` | URL to original content |
 | `score` | `Optional[int]` | Numerical score value for content evaluation |
 | `category` | `Optional[str]` | Primary category classification for the content |
-| `score_detail` | `Dict[str, int]` | Audience fit scores (e.g., `{'woman': 65, 'man': 30, '10-15': 150, 'us': 65, 'english': 110}`) |
-| `category_flags` | `Dict[str, int]` | Secondary category tags with strength scores 0-100 (e.g., `{'Scary': 100, 'Action': 75, 'Drama': 60}`) |
+| `subcategory_relevance` | `Dict[str, int]` | Relevance scores for subcategories (e.g., `{'true_crime': 92, 'mystery': 88, 'horror': 75}`) |
+| `contextual_category_scores` | `Dict[str, int]` | Contextual performance scores as % of base (e.g., `{'language:english': 145, 'region:us': 160, 'age:18-24': 142}`) |
 
 ### ContentType
 
