@@ -81,7 +81,7 @@ idea = IdeaInspiration(
     content="Full article text",
     keywords=["article", "example"],
     source_type=ContentType.TEXT,
-    metadata={"author": "John Doe"},
+    metadata={"author": "John Doe", "publish_date": "2025-01-15"},
     source_id="article-123",
     source_url="https://example.com/article"
 )
@@ -243,6 +243,35 @@ pytest --cov=prismq --cov-report=html
 pytest tests/test_idea_inspiration.py -v
 ```
 
+## Running Examples
+
+Run the example script to see the model in action:
+
+```bash
+python example.py
+```
+
+This will demonstrate:
+- Basic creation of IdeaInspiration instances
+- Factory methods for text, video, and audio content
+- Serialization and deserialization
+- Content type comparison
+- Metadata best practices for SQLite/S3DB compatibility
+
+### SQLite/S3DB Demonstration
+
+Run the SQLite demonstration to see database compatibility:
+
+```bash
+python sqlite_demo.py
+```
+
+This demonstrates:
+- Creating a SQLite database schema
+- Storing IdeaInspiration objects in SQLite
+- Retrieving and verifying data integrity
+- Confirming string-based metadata compatibility
+
 ## Development
 
 ### Setup Development Environment
@@ -353,6 +382,7 @@ PrismQ.IdeaInspiration.Model/
 
 ## Version History
 
+- **v0.1.1** - SQLite/S3DB compatibility with `Dict[str, str]` metadata, comprehensive examples
 - **v0.1.0** - Initial release with core IdeaInspiration model
 
 ## License
