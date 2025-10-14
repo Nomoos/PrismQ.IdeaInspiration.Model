@@ -131,7 +131,7 @@ The core data model with the following fields:
 | `content` | `str` | Main text content (body, subtitles, or transcription) |
 | `keywords` | `List[str]` | List of relevant keywords or tags |
 | `source_type` | `ContentType` | Type of content source (TEXT/VIDEO/AUDIO/UNKNOWN) |
-| `metadata` | `Dict[str, Any]` | Additional source-specific metadata |
+| `metadata` | `Dict[str, str]` | Additional source-specific metadata (string key-value pairs for SQLite compatibility) |
 | `source_id` | `Optional[str]` | Unique identifier from source platform |
 | `source_url` | `Optional[str]` | URL to original content |
 
@@ -143,6 +143,74 @@ Enumeration for content source types:
 - `ContentType.VIDEO` - Video content with subtitles/transcriptions
 - `ContentType.AUDIO` - Audio content with transcriptions
 - `ContentType.UNKNOWN` - Unknown or unspecified source type
+
+## Metadata Examples
+
+The `metadata` field uses `Dict[str, str]` (string key-value pairs) for SQLite/S3DB compatibility. Here are examples for different content types:
+
+### Text Content Metadata
+
+```python
+idea = IdeaInspiration.from_text(
+    title="Understanding Neural Networks",
+    text_content="Neural networks are...",
+    metadata={
+        "author": "Dr. Sarah Johnson",
+        "publish_date": "2025-01-15",
+        "word_count": "2500",
+        "reading_time_minutes": "12",
+        "category": "machine-learning",
+        "platform": "medium",
+        "language": "en",
+    }
+)
+```
+
+### Video Content Metadata
+
+```python
+idea = IdeaInspiration.from_video(
+    title="Python Deep Dive",
+    subtitle_text="In this video...",
+    metadata={
+        "channel": "CodeMasters",
+        "channel_id": "UC123456",
+        "views": "150000",
+        "likes": "8500",
+        "duration_seconds": "2400",
+        "upload_date": "2025-01-10",
+        "resolution": "1080p",
+        "language": "en",
+    }
+)
+```
+
+### Audio Content Metadata
+
+```python
+idea = IdeaInspiration.from_audio(
+    title="Tech Talk Podcast #42",
+    transcription="Welcome everyone...",
+    metadata={
+        "host": "Mike Developer",
+        "guest": "Jane Engineer",
+        "episode_number": "42",
+        "season": "3",
+        "duration_seconds": "4200",
+        "release_date": "2025-01-12",
+        "format": "mp3",
+        "bitrate": "128kbps",
+        "language": "en",
+    }
+)
+```
+
+### SQLite/S3DB Best Practices
+
+- **All values as strings**: Store numeric values as strings, convert when needed
+- **Date format**: Use ISO 8601 format (YYYY-MM-DD) for dates
+- **Key naming**: Use snake_case for consistency
+- **Easy serialization**: Data can be easily serialized to JSON for SQLite TEXT fields
 
 ## Factory Methods
 
@@ -278,8 +346,10 @@ PrismQ.IdeaInspiration.Model/
 2. **Type Safe** - Full type hints for IDE support
 3. **Extensible** - Easy to add new factory methods for different sources
 4. **Serializable** - Convert to/from dictionaries for storage
-5. **Well Documented** - Clear documentation and examples
-6. **Well Tested** - Comprehensive test coverage
+5. **SQLite Compatible** - Metadata uses string values for database compatibility
+6. **Well Documented** - Clear documentation and examples
+7. **Well Tested** - Comprehensive test coverage
+8. **Single Responsibility** - Each class and method has one clear purpose
 
 ## Version History
 

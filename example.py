@@ -62,14 +62,14 @@ def example_from_video():
         description="Learn Python programming in 30 minutes",
         subtitle_text="Welcome to this Python tutorial. Today we'll cover variables, loops, and functions...",
         keywords=["python", "tutorial", "programming", "beginners"],
-        metadata={"views": 500000, "likes": 25000, "duration": 1800},  # seconds
+        metadata={"views": "500000", "likes": "25000", "duration": "1800"},  # All values as strings
         source_id="video-abc-123",
     )
 
     print(f"Title: {idea.title}")
-    print(f"Views: {idea.metadata['views']:,}")
-    print(f"Likes: {idea.metadata['likes']:,}")
-    print(f"Duration: {idea.metadata['duration'] // 60} minutes")
+    print(f"Views: {int(idea.metadata['views']):,}")
+    print(f"Likes: {int(idea.metadata['likes']):,}")
+    print(f"Duration: {int(idea.metadata['duration']) // 60} minutes")
     print(f"Content Preview: {idea.content[:100]}...")
     print()
 
@@ -119,7 +119,7 @@ def example_from_audio():
         description="Discussion about the current state of AI",
         transcription="Welcome to the PrismQ Podcast. Today we're discussing artificial intelligence in 2025...",
         keywords=["podcast", "AI", "technology", "2025"],
-        metadata={"duration": 3600, "host": "John Doe", "guest": "Dr. Jane Smith", "episode": 15},
+        metadata={"duration": "3600", "host": "John Doe", "guest": "Dr. Jane Smith", "episode": "15"},
         source_id="podcast-ep15",
     )
 
@@ -127,7 +127,7 @@ def example_from_audio():
     print(f"Episode: {idea.metadata['episode']}")
     print(f"Host: {idea.metadata['host']}")
     print(f"Guest: {idea.metadata['guest']}")
-    print(f"Duration: {idea.metadata['duration'] // 60} minutes")
+    print(f"Duration: {int(idea.metadata['duration']) // 60} minutes")
     print(f"Transcription Preview: {idea.content[:100]}...")
     print()
 
@@ -160,6 +160,82 @@ def example_content_types():
     print()
 
 
+def example_metadata_best_practices():
+    """Example 7: Metadata best practices for SQLite compatibility."""
+    print("=" * 60)
+    print("Example 7: Metadata Best Practices (SQLite/S3DB)")
+    print("=" * 60)
+
+    # Text content metadata examples
+    text_idea = IdeaInspiration.from_text(
+        title="Understanding Neural Networks",
+        text_content="Neural networks are...",
+        metadata={
+            "author": "Dr. Sarah Johnson",
+            "publish_date": "2025-01-15",
+            "word_count": "2500",
+            "reading_time_minutes": "12",
+            "category": "machine-learning",
+            "platform": "medium",
+            "language": "en",
+        }
+    )
+
+    print("Text Metadata Example:")
+    for key, value in text_idea.metadata.items():
+        print(f"  {key}: {value}")
+
+    # Video content metadata examples
+    video_idea = IdeaInspiration.from_video(
+        title="Python Deep Dive",
+        subtitle_text="In this video...",
+        metadata={
+            "channel": "CodeMasters",
+            "channel_id": "UC123456",
+            "views": "150000",
+            "likes": "8500",
+            "dislikes": "120",
+            "duration_seconds": "2400",
+            "upload_date": "2025-01-10",
+            "resolution": "1080p",
+            "language": "en",
+        }
+    )
+
+    print("\nVideo Metadata Example:")
+    for key, value in video_idea.metadata.items():
+        print(f"  {key}: {value}")
+
+    # Audio content metadata examples
+    audio_idea = IdeaInspiration.from_audio(
+        title="Tech Talk Podcast #42",
+        transcription="Welcome everyone...",
+        metadata={
+            "host": "Mike Developer",
+            "guest": "Jane Engineer",
+            "episode_number": "42",
+            "season": "3",
+            "duration_seconds": "4200",
+            "release_date": "2025-01-12",
+            "format": "mp3",
+            "bitrate": "128kbps",
+            "language": "en",
+        }
+    )
+
+    print("\nAudio Metadata Example:")
+    for key, value in audio_idea.metadata.items():
+        print(f"  {key}: {value}")
+
+    print("\nKey Points for SQLite Compatibility:")
+    print("  ✓ All metadata values are strings (Dict[str, str])")
+    print("  ✓ Numeric values stored as strings (convert when needed)")
+    print("  ✓ Dates in ISO format (YYYY-MM-DD)")
+    print("  ✓ Consistent key naming (snake_case)")
+    print("  ✓ Easy to serialize to JSON for SQLite TEXT fields")
+    print()
+
+
 def main():
     """Run all examples."""
     print("\n")
@@ -176,6 +252,7 @@ def main():
     example_serialization()
     example_from_audio()
     example_content_types()
+    example_metadata_best_practices()
 
     print("=" * 60)
     print("All examples completed successfully!")
