@@ -87,60 +87,6 @@ idea = IdeaInspiration(
 )
 ```
 
-### YouTube Integration
-
-```python
-from prismq.idea.model import IdeaInspiration
-
-# From YouTube API response
-video_data = {
-    'id': 'abc123',
-    'snippet': {
-        'title': 'Amazing Python Tutorial',
-        'description': 'Learn Python in 10 minutes',
-        'tags': ['python', 'tutorial', 'programming'],
-        'channelTitle': 'Code Academy'
-    },
-    'statistics': {
-        'viewCount': '1000000',
-        'likeCount': '50000',
-        'commentCount': '1000'
-    }
-}
-
-transcription = "Welcome to this Python tutorial..."
-
-idea = IdeaInspiration.from_youtube_video(video_data, transcription)
-
-print(f"Title: {idea.title}")
-print(f"Channel: {idea.metadata['channel']}")
-print(f"Views: {idea.metadata['statistics']['viewCount']}")
-print(f"URL: {idea.source_url}")
-```
-
-### Reddit Integration
-
-```python
-from prismq.idea.model import IdeaInspiration
-
-# From Reddit API response
-post_data = {
-    'id': 'post123',
-    'title': 'AITA for leaving early?',
-    'selftext': 'Here is my full story...',
-    'subreddit': 'AmItheAsshole',
-    'score': 5000,
-    'num_comments': 250
-}
-
-idea = IdeaInspiration.from_reddit_post(post_data)
-
-print(f"Title: {idea.title}")
-print(f"Subreddit: {idea.metadata['subreddit']}")
-print(f"Score: {idea.metadata['score']}")
-print(f"URL: {idea.source_url}")
-```
-
 ### Serialization
 
 ```python
@@ -206,11 +152,6 @@ Enumeration for content source types:
 - `IdeaInspiration.from_video()` - Create from video with subtitles
 - `IdeaInspiration.from_audio()` - Create from audio with transcription
 
-### Platform-Specific
-
-- `IdeaInspiration.from_youtube_video()` - Create from YouTube API data
-- `IdeaInspiration.from_reddit_post()` - Create from Reddit API data
-
 ### Serialization
 
 - `IdeaInspiration.to_dict()` - Convert to dictionary
@@ -266,18 +207,38 @@ mypy prismq/
 
 ## Integration with Other PrismQ Modules
 
-### In Scoring Module
+### With Builder Module
+
+The Builder module (PrismQ.IdeaInspiration.Builder) handles platform-specific transformations from various sources (YouTube, Reddit, etc.) into the clean IdeaInspiration model:
+
+```python
+from prismq.idea.model import IdeaInspiration
+from prismq.idea.builder import YouTubeBuilder, RedditBuilder
+
+# Builder transforms YouTube data into clean model
+youtube_builder = YouTubeBuilder()
+idea = youtube_builder.build(video_data, transcription)
+
+# Builder transforms Reddit data into clean model  
+reddit_builder = RedditBuilder()
+idea = reddit_builder.build(post_data)
+```
+
+### With Scoring Module
 
 ```python
 from prismq.idea.model import IdeaInspiration
 from prismq.idea.scoring import ScoringEngine
 
 engine = ScoringEngine()
-idea = IdeaInspiration.from_youtube_video(video_data, transcription)
+idea = IdeaInspiration.from_text(
+    title="My Article",
+    text_content="Article content..."
+)
 score_results = engine.score_idea_inspiration(idea)
 ```
 
-### In Classification Module
+### With Classification Module
 
 ```python
 from prismq.idea.model import IdeaInspiration
