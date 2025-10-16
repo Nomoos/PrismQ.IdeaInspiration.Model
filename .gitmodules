@@ -1,0 +1,9 @@
+[submodule "PrismQ/mod/IdeaInspiration/mod/Classification"]
+	path = PrismQ/mod/IdeaInspiration/mod/Classification
+	url = https://github.com/Nomoos/PrismQ.IdeaInspiration.Classification.git
+[submodule "PrismQ/mod/IdeaInspiration/mod/Scoring"]
+	path = PrismQ/mod/IdeaInspiration/mod/Scoring
+	url = https://github.com/Nomoos/PrismQ.IdeaInspiration.Scoring.git
+[submodule "PrismQ/mod/IdeaInspiration/mod/Builder"]
+	path = PrismQ/mod/IdeaInspiration/mod/Builder
+	url = https://github.com/Nomoos/PrismQ.IdeaInspiration.Builder.git
