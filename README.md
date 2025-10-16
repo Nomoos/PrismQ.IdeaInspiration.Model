@@ -356,6 +356,30 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -e ".[dev]"
 ```
 
+### Adding Related PrismQ Modules as Submodules
+
+To include related PrismQ modules (Classification, Scoring, Builder) as git submodules in the correct directory structure:
+
+**Windows:**
+```batch
+scripts\submodule-converter.bat
+```
+
+**Linux/Unix/Mac:**
+```bash
+bash scripts/submodule-converter.sh
+```
+
+This creates the directory structure:
+```
+PrismQ/mod/IdeaInspiration/mod/
+├── Classification/
+├── Scoring/
+└── Builder/
+```
+
+See `scripts/SUBMODULE_CONVERTER_README.md` for more details.
+
 ### Code Quality
 
 ```bash
