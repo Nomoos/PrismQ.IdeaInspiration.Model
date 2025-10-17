@@ -458,17 +458,18 @@ PrismQ.IdeaInspiration.Model/
 ├── prismq/
 │   └── idea/
 │       └── model/
-│           ├── __init__.py              # Package exports
-│           └── idea_inspiration.py      # Core model
+│           ├── __init__.py                                  # Package exports
+│           └── idea_inspiration.py                          # Core model
 ├── tests/
 │   ├── __init__.py
-│   └── test_idea_inspiration.py         # Comprehensive tests
+│   └── test_idea_inspiration.py                             # Comprehensive tests
+├── Setup-IdeaInspiration-into-db-createtable.bat            # Database setup script
 ├── .gitignore
 ├── LICENSE
 ├── README.md
-├── pyproject.toml                       # Project configuration
-├── requirements.txt                     # Dependencies (none)
-└── setup.py                             # Setup configuration
+├── pyproject.toml                                           # Project configuration
+├── requirements.txt                                         # Dependencies (none)
+└── setup.py                                                 # Setup configuration
 ```
 
 ## Design Principles
