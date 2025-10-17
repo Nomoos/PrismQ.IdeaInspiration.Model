@@ -21,7 +21,8 @@ Features:
 - Updates .env with working Python executable
 - Allows user to choose custom database location
 - Displays complete table schema after creation
-- Includes all model fields: title, description, content, keywords, source_type, metadata, source_id, source_url, score, category, subcategory_relevance, contextual_category_scores, created_at, updated_at
+- Includes all model fields: title, description, content, keywords, source_type, metadata, source_id, source_url, score, category, subcategory_relevance, contextual_category_scores
+- Includes database-only timestamp fields: created_at, updated_at (automatically managed by SQLite)
 
 **Database Schema:**
 ```sql

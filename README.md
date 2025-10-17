@@ -47,7 +47,7 @@ The database will include the following fields:
 - Basic fields: title, description, content, keywords
 - Source fields: source_type, source_id, source_url, metadata
 - Scoring fields: score, category, subcategory_relevance, contextual_category_scores
-- System fields: id, created_at, updated_at
+- Database system fields: id (auto-increment), created_at, updated_at (timestamps)
 
 ## Installation
 
