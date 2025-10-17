@@ -60,9 +60,9 @@ def create_database():
     conn = sqlite3.connect(str(db_path))
     cursor = conn.cursor()
     
-    # Create table
+    # Create table if it doesn't exist
     cursor.execute('''
-        CREATE TABLE ideas (
+        CREATE TABLE IF NOT EXISTS ideas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
             description TEXT,
