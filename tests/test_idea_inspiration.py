@@ -405,7 +405,10 @@ class TestIdeaInspirationScoringFields:
     def test_create_with_contextual_category_scores(self):
         """Test creating IdeaInspiration with contextual_category_scores field."""
         contextual_category_scores = {"tech": 85, "business": 60, "science": 75}
-        idea = IdeaInspiration(title="Test Article", contextual_category_scores=contextual_category_scores)
+        idea = IdeaInspiration(
+            title="Test Article",
+            contextual_category_scores=contextual_category_scores
+        )
         assert idea.contextual_category_scores == contextual_category_scores
         assert idea.contextual_category_scores["tech"] == 85
         assert 0 <= idea.contextual_category_scores["business"] <= 100

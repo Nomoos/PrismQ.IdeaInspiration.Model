@@ -45,7 +45,7 @@ class IdeaInspiration:
         score: Optional numerical score value for the content
         category: Optional primary category classification for the content
         subcategory_relevance: Relevance scores for secondary categories/subcategories
-                               (e.g., {'true_crime': 92, 'psychological_thriller': 81, 
+                               (e.g., {'true_crime': 92, 'psychological_thriller': 81,
                                'mystery': 88, 'horror': 75})
         contextual_category_scores: Contextual performance scores as percentages of base
                                     for different contexts (e.g., {'language:english': 145,
