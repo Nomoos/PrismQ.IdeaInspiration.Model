@@ -27,7 +27,7 @@ def get_database_path():
             IdeaInspiration/
               Model/                 <- Current repository
                 scripts/
-          prismq_ideas.db            <- Database location (same level as PrismQ)
+          db.s3db                    <- Database location (same level as PrismQ)
     """
     # Check for environment variable override
     env_db_path = os.getenv('PRISMQ_DB_PATH')
@@ -42,7 +42,7 @@ def get_database_path():
     db_dir = current_dir.parent.parent.parent
     
     # Database file at the same level as PrismQ directory
-    db_path = db_dir / "prismq_ideas.db"
+    db_path = db_dir / "db.s3db"
     
     return db_path
 

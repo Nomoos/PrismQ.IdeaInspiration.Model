@@ -60,10 +60,10 @@ db.sqlite3
 db.sqlite3-journal
 
 # PrismQ database files (created at PrismQ top level)
-**/prismq_ideas.db
-**/prismq_ideas.db-journal
-**/prismq_ideas.db-wal
-**/prismq_ideas.db-shm
+**/db.s3db
+**/db.s3db-journal
+**/db.s3db-wal
+**/db.s3db-shm
 
 # Flask stuff:
 instance/
