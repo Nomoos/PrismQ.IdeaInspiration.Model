@@ -7,6 +7,9 @@ echo PrismQ.IdeaInspiration.Model Setup
 echo =====================================
 echo.
 
+REM Navigate to repository root (parent of scripts directory)
+cd /d "%~dp0.."
+
 REM Set default Python executable
 set PYTHON_EXEC=python
 
