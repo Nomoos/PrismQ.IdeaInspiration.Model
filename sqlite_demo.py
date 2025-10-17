@@ -6,12 +6,50 @@ in a SQLite database using the string-based metadata.
 
 import sqlite3
 import json
+import os
+from pathlib import Path
 from prismq.idea.model import IdeaInspiration, ContentType
+
+
+def get_database_path():
+    """Get the database path at the PrismQ top level.
+    
+    Returns the path to the database file at the same level as the PrismQ
+    top level directory. This allows multiple PrismQ modules to share the
+    same database.
+    
+    Repository structure:
+        VideoMaking/
+          PrismQ/                    <- PrismQ top level directory
+            IdeaInspiration/
+              Model/                 <- Current repository
+                scripts/
+          prismq_ideas.db            <- Database location (same level as PrismQ)
+    """
+    # Get the current script's directory
+    current_dir = Path(__file__).parent.absolute()
+    
+    # Go up 3 levels from Model/ to get to the same level as PrismQ/
+    # Model/ -> IdeaInspiration/ -> PrismQ/ -> VideoMaking/
+    db_dir = current_dir.parent.parent.parent
+    
+    # Database file at the same level as PrismQ directory
+    db_path = db_dir / "prismq_ideas.db"
+    
+    return db_path
 
 
 def create_database():
     """Create a SQLite database with ideas table."""
-    conn = sqlite3.connect(':memory:')  # In-memory database for demo
+    db_path = get_database_path()
+    
+    # Ensure the directory exists
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    print(f"Database location: {db_path}")
+    print()
+    
+    conn = sqlite3.connect(str(db_path))
     cursor = conn.cursor()
     
     # Create table
