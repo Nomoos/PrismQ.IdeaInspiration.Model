@@ -7,6 +7,9 @@ echo PrismQ.IdeaInspiration.Model Lint
 echo =====================================
 echo.
 
+REM Navigate to repository root (parent of scripts directory)
+cd /d "%~dp0.."
+
 REM Check if virtual environment exists
 if not exist "venv" (
     echo Virtual environment not found!
