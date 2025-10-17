@@ -28,7 +28,9 @@ The model provides a unified structure for representing content ideas from vario
 
 ## Quick Setup
 
-### Database Setup (Windows)
+### Database Setup
+
+#### Windows (Primary Platform)
 
 Run the setup script to create the database in your working directory:
 
@@ -42,6 +44,18 @@ This script will:
 - Create `db.s3db` in your working directory (or custom location)
 - Create the `IdeaInspiration` table with the complete data model
 - Interactively ask for any missing configuration values
+
+#### Linux/macOS (CI/Testing)
+
+For CI environments and testing on Linux/macOS:
+
+```bash
+./setup-idea-inspiration-db.sh
+```
+
+This script provides the same functionality optimized for non-interactive CI environments. It automatically detects non-interactive mode (pipes/redirects) and skips user prompts.
+
+#### Database Fields
 
 The database will include the following fields:
 - Basic fields: title, description, content, keywords
@@ -463,7 +477,8 @@ PrismQ.IdeaInspiration.Model/
 ├── tests/
 │   ├── __init__.py
 │   └── test_idea_inspiration.py                             # Comprehensive tests
-├── Setup-IdeaInspiration-into-db-createtable.bat            # Database setup script
+├── Setup-IdeaInspiration-into-db-createtable.bat            # Database setup (Windows)
+├── setup-idea-inspiration-db.sh                             # Database setup (Linux/CI)
 ├── .gitignore
 ├── LICENSE
 ├── README.md
