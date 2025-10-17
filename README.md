@@ -35,7 +35,7 @@ The model provides a unified structure for representing content ideas from vario
 Run the setup script to create the database in your working directory:
 
 ```batch
-Setup-IdeaInspiration-into-db-createtable.bat
+setup_db.bat
 ```
 
 This script will:
@@ -50,7 +50,7 @@ This script will:
 For CI environments and testing on Linux/macOS:
 
 ```bash
-./setup-idea-inspiration-db.sh
+./setup_db.sh
 ```
 
 This script provides the same functionality optimized for non-interactive CI environments. It automatically detects non-interactive mode (pipes/redirects) and skips user prompts.
@@ -59,7 +59,7 @@ This script provides the same functionality optimized for non-interactive CI env
 
 The database will include the following fields:
 - Basic fields: title, description, content, keywords
-- Source fields: source_type, source_id, source_url, metadata
+- Source fields: source_type, source_id, source_url, source_created_by, source_created_at, metadata
 - Scoring fields: score, category, subcategory_relevance, contextual_category_scores
 - Database system fields: id (auto-increment), created_at, updated_at (timestamps)
 
@@ -82,7 +82,7 @@ pip install -e ".[dev]"
 ## Quick Start
 
 ```python
-from prismq.idea.model import IdeaInspiration, ContentType
+from prismq.model import IdeaInspiration, ContentType
 
 # Create from text content
 idea = IdeaInspiration.from_text(
@@ -114,7 +114,7 @@ audio_idea = IdeaInspiration.from_audio(
 ### Basic Creation
 
 ```python
-from prismq.idea.model import IdeaInspiration, ContentType
+from prismq.model import IdeaInspiration, ContentType
 
 # Manual creation
 idea = IdeaInspiration(
@@ -132,7 +132,7 @@ idea = IdeaInspiration(
 ### Serialization
 
 ```python
-from prismq.idea.model import IdeaInspiration
+from prismq.model import IdeaInspiration
 
 # Create an idea
 idea = IdeaInspiration.from_text(
@@ -165,7 +165,7 @@ assert restored.title == idea.title
 The model supports scoring and categorization fields for content evaluation:
 
 ```python
-from prismq.idea.model import IdeaInspiration
+from prismq.model import IdeaInspiration
 
 # Create with scoring and category information
 idea = IdeaInspiration.from_text(
@@ -224,6 +224,8 @@ The core data model with the following fields:
 | `metadata` | `Dict[str, str]` | Additional source-specific metadata (string key-value pairs for SQLite compatibility) |
 | `source_id` | `Optional[str]` | Unique identifier from source platform |
 | `source_url` | `Optional[str]` | URL to original content |
+| `source_created_by` | `Optional[str]` | Creator/author of the source content |
+| `source_created_at` | `Optional[str]` | Creation timestamp of the source content (ISO 8601 format recommended) |
 | `score` | `Optional[int]` | Numerical score value for content evaluation |
 | `category` | `Optional[str]` | Primary category classification for the content |
 | `subcategory_relevance` | `Dict[str, int]` | Relevance scores for subcategories (e.g., `{'true_crime': 92, 'mystery': 88, 'horror': 75}`) |
@@ -342,7 +344,7 @@ pytest tests/test_idea_inspiration.py -v
 Once the database is set up, you can use the IdeaInspiration model in your Python code:
 
 ```python
-from prismq.idea.model import IdeaInspiration, ContentType
+from prismq.model import IdeaInspiration, ContentType
 import sqlite3
 import json
 
@@ -425,7 +427,7 @@ mypy prismq/
 The Builder module (PrismQ.IdeaInspiration.Builder) handles platform-specific transformations from various sources (YouTube, Reddit, etc.) into the clean IdeaInspiration model:
 
 ```python
-from prismq.idea.model import IdeaInspiration
+from prismq.model import IdeaInspiration
 from prismq.idea.builder import YouTubeBuilder, RedditBuilder
 
 # Builder transforms YouTube data into clean model
@@ -440,7 +442,7 @@ idea = reddit_builder.build(post_data)
 ### With Scoring Module
 
 ```python
-from prismq.idea.model import IdeaInspiration
+from prismq.model import IdeaInspiration
 from prismq.idea.scoring import ScoringEngine
 
 engine = ScoringEngine()
@@ -454,7 +456,7 @@ score_results = engine.score_idea_inspiration(idea)
 ### With Classification Module
 
 ```python
-from prismq.idea.model import IdeaInspiration
+from prismq.model import IdeaInspiration
 from prismq.idea.classification import TextClassifier
 
 classifier = TextClassifier()
@@ -470,21 +472,20 @@ result = classifier.classify(idea)
 ```
 PrismQ.IdeaInspiration.Model/
 ├── prismq/
-│   └── idea/
-│       └── model/
-│           ├── __init__.py                                  # Package exports
-│           └── idea_inspiration.py                          # Core model
+│   └── model/
+│       ├── __init__.py                  # Package exports
+│       └── idea_inspiration.py          # Core model
 ├── tests/
 │   ├── __init__.py
-│   └── test_idea_inspiration.py                             # Comprehensive tests
-├── Setup-IdeaInspiration-into-db-createtable.bat            # Database setup (Windows)
-├── setup-idea-inspiration-db.sh                             # Database setup (Linux/CI)
+│   └── test_model.py                    # Comprehensive tests
+├── setup_db.bat                         # Database setup (Windows)
+├── setup_db.sh                          # Database setup (Linux/CI)
 ├── .gitignore
 ├── LICENSE
 ├── README.md
-├── pyproject.toml                                           # Project configuration
-├── requirements.txt                                         # Dependencies (none)
-└── setup.py                                                 # Setup configuration
+├── pyproject.toml                       # Project configuration
+├── requirements.txt                     # Dependencies (none)
+└── setup.py                             # Setup configuration
 ```
 
 ## Design Principles

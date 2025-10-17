@@ -106,6 +106,8 @@ try:
             metadata TEXT,
             source_id TEXT,
             source_url TEXT,
+            source_created_by TEXT,
+            source_created_at TEXT,
             score INTEGER,
             category TEXT,
             subcategory_relevance TEXT,
@@ -147,6 +149,8 @@ echo "  - source_type: TEXT (text/video/audio/unknown)"
 echo "  - metadata: TEXT (JSON object with string key-value pairs)"
 echo "  - source_id: TEXT"
 echo "  - source_url: TEXT"
+echo "  - source_created_by: TEXT"
+echo "  - source_created_at: TEXT"
 echo "  - score: INTEGER"
 echo "  - category: TEXT"
 echo "  - subcategory_relevance: TEXT (JSON object with int values)"

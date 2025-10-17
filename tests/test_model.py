@@ -1,7 +1,7 @@
 """Tests for IdeaInspiration model."""
 
 import pytest
-from prismq.idea.model import IdeaInspiration, ContentType
+from prismq.model import IdeaInspiration, ContentType
 
 
 class TestIdeaInspirationBasic:
@@ -537,3 +537,98 @@ class TestIdeaInspirationScoringFields:
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
+
+class TestIdeaInspirationNewFields:
+    """Test new source_created_by and source_created_at fields."""
+
+    def test_create_with_source_created_by(self):
+        """Test creating IdeaInspiration with source_created_by field."""
+        idea = IdeaInspiration(
+            title="Test Article",
+            source_created_by="John Doe"
+        )
+        assert idea.source_created_by == "John Doe"
+
+    def test_create_with_source_created_at(self):
+        """Test creating IdeaInspiration with source_created_at field."""
+        idea = IdeaInspiration(
+            title="Test Article",
+            source_created_at="2025-01-15T10:30:00Z"
+        )
+        assert idea.source_created_at == "2025-01-15T10:30:00Z"
+
+    def test_default_values_for_new_fields(self):
+        """Test default values for new fields."""
+        idea = IdeaInspiration(title="Test Article")
+        assert idea.source_created_by is None
+        assert idea.source_created_at is None
+
+    def test_from_text_with_new_fields(self):
+        """Test creating from text with new fields."""
+        idea = IdeaInspiration.from_text(
+            title="Article Title",
+            text_content="Content",
+            source_created_by="Jane Smith",
+            source_created_at="2025-01-15T12:00:00Z"
+        )
+        assert idea.source_created_by == "Jane Smith"
+        assert idea.source_created_at == "2025-01-15T12:00:00Z"
+
+    def test_from_video_with_new_fields(self):
+        """Test creating from video with new fields."""
+        idea = IdeaInspiration.from_video(
+            title="Video Title",
+            subtitle_text="Subtitles",
+            source_created_by="VideoCreator123",
+            source_created_at="2025-01-14T08:30:00Z"
+        )
+        assert idea.source_created_by == "VideoCreator123"
+        assert idea.source_created_at == "2025-01-14T08:30:00Z"
+
+    def test_from_audio_with_new_fields(self):
+        """Test creating from audio with new fields."""
+        idea = IdeaInspiration.from_audio(
+            title="Podcast Episode",
+            transcription="Audio transcription",
+            source_created_by="PodcastHost",
+            source_created_at="2025-01-13T15:45:00Z"
+        )
+        assert idea.source_created_by == "PodcastHost"
+        assert idea.source_created_at == "2025-01-13T15:45:00Z"
+
+    def test_serialization_with_new_fields(self):
+        """Test serialization includes new fields."""
+        idea = IdeaInspiration(
+            title="Test Article",
+            source_created_by="Author Name",
+            source_created_at="2025-01-15T10:00:00Z"
+        )
+        data = idea.to_dict()
+        assert data["source_created_by"] == "Author Name"
+        assert data["source_created_at"] == "2025-01-15T10:00:00Z"
+
+    def test_deserialization_with_new_fields(self):
+        """Test deserialization includes new fields."""
+        data = {
+            "title": "Test Article",
+            "source_created_by": "Test Author",
+            "source_created_at": "2025-01-15T11:30:00Z"
+        }
+        idea = IdeaInspiration.from_dict(data)
+        assert idea.source_created_by == "Test Author"
+        assert idea.source_created_at == "2025-01-15T11:30:00Z"
+
+    def test_round_trip_with_new_fields(self):
+        """Test round-trip serialization with new fields."""
+        original = IdeaInspiration(
+            title="Original Article",
+            description="Description",
+            content="Content",
+            source_created_by="Original Author",
+            source_created_at="2025-01-15T14:20:00Z"
+        )
+        data = original.to_dict()
+        restored = IdeaInspiration.from_dict(data)
+        assert restored.source_created_by == original.source_created_by
+        assert restored.source_created_at == original.source_created_at

@@ -8,7 +8,7 @@ Main exports:
     - ContentType: Enum for content source types (text/video/audio)
 
 Example:
-    >>> from prismq.idea.model import IdeaInspiration, ContentType
+    >>> from prismq.model import IdeaInspiration, ContentType
     >>>
     >>> # Create from text
     >>> idea = IdeaInspiration.from_text(
@@ -26,9 +26,9 @@ Example:
     ... )
 """
 
-from prismq.idea.model.idea_inspiration import IdeaInspiration, ContentType
+from prismq.model.idea_inspiration import IdeaInspiration, ContentType
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 __all__ = [
     "IdeaInspiration",
