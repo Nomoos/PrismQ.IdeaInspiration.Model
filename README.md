@@ -1,10 +1,14 @@
 # PrismQ.IdeaInspiration.Model
 
-**Core data model for content ideas across the PrismQ ecosystem**
+**Core data model and database setup for content ideas across the PrismQ ecosystem**
 
 ## Overview
 
-This package provides the `IdeaInspiration` data model used across PrismQ modules including:
+This repository provides:
+1. The `IdeaInspiration` data model used across PrismQ modules
+2. Database setup script to create and configure the SQLite database in your working directory
+
+The model is used by:
 - **[PrismQ.IdeaInspiration.Scoring](https://github.com/Nomoos/PrismQ.IdeaInspiration.Scoring)** - Content scoring engine
 - **[PrismQ.IdeaInspiration.Classification](https://github.com/Nomoos/PrismQ.IdeaInspiration.Classification)** - Content classification
 - **PrismQ.IdeaInspiration.Builder** - Model construction from various sources
@@ -17,9 +21,33 @@ The model provides a unified structure for representing content ideas from vario
 - 🎯 **Unified Data Model** - Single structure for text, video, and audio content
 - 🏭 **Factory Methods** - Easy creation from different sources (text, YouTube, Reddit, etc.)
 - 📦 **Serialization** - Convert to/from dictionaries for storage and transmission
+- 💾 **Database Setup** - Automated script to create and configure SQLite database
 - 🔌 **Zero Dependencies** - Pure Python with no external requirements
 - 🧪 **Well Tested** - Comprehensive test coverage
 - 📝 **Type Hints** - Full type annotation support
+
+## Quick Setup
+
+### Database Setup (Windows)
+
+Run the setup script to create the database in your working directory:
+
+```batch
+Setup-IdeaInspiration-into-db-createtable.bat
+```
+
+This script will:
+- Check for `.env` configuration (creates one if missing)
+- Prompt for Python executable if not configured
+- Create `db.s3db` in your working directory (or custom location)
+- Create the `IdeaInspiration` table with the complete data model
+- Interactively ask for any missing configuration values
+
+The database will include the following fields:
+- Basic fields: title, description, content, keywords
+- Source fields: source_type, source_id, source_url, metadata
+- Scoring fields: score, category, subcategory_relevance, contextual_category_scores
+- System fields: id, created_at, updated_at
 
 ## Installation
 
@@ -295,63 +323,55 @@ pytest --cov=prismq --cov-report=html
 pytest tests/test_idea_inspiration.py -v
 ```
 
-## Running Examples
+## Usage in Python Code
 
-Run the example script to see the model in action:
+Once the database is set up, you can use the IdeaInspiration model in your Python code:
 
-```bash
-python example.py
-```
+```python
+from prismq.idea.model import IdeaInspiration, ContentType
+import sqlite3
+import json
 
-This will demonstrate:
-- Basic creation of IdeaInspiration instances
-- Factory methods for text, video, and audio content
-- Serialization and deserialization
-- Content type comparison
-- Metadata best practices for SQLite/S3DB compatibility
+# Connect to the database
+conn = sqlite3.connect('db.s3db')
+cursor = conn.cursor()
 
-### Scoring and Category Features
+# Create an IdeaInspiration instance
+idea = IdeaInspiration.from_text(
+    title="My Article",
+    description="Article description",
+    text_content="Full article content...",
+    keywords=["article", "example"],
+    score=85,
+    category="technology"
+)
 
-Run the scoring demonstration to see the new scoring and category features:
+# Convert to dictionary for storage
+data = idea.to_dict()
 
-```bash
-python scoring_demo.py
-```
+# Store in database
+cursor.execute('''
+    INSERT INTO IdeaInspiration 
+    (title, description, content, keywords, source_type, metadata, source_id, 
+     source_url, score, category, subcategory_relevance, contextual_category_scores)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+''', (
+    data['title'],
+    data['description'],
+    data['content'],
+    json.dumps(data['keywords']),
+    data['source_type'],
+    json.dumps(data['metadata']),
+    data['source_id'],
+    data['source_url'],
+    data['score'],
+    data['category'],
+    json.dumps(data['subcategory_relevance']),
+    json.dumps(data['contextual_category_scores'])
+))
 
-This demonstrates:
-- Basic scoring and category assignment
-- Score detail with market-specific performance multipliers
-- Category flags with flavor strength ratings (0-100 scale)
-- Comprehensive scoring examples
-- Serialization with scoring fields
-
-### SQLite/S3DB Demonstration
-
-Run the SQLite demonstration to see database compatibility:
-
-```bash
-python sqlite_demo.py
-```
-
-This demonstrates:
-- Creating a SQLite database schema at the PrismQ top level
-- Storing IdeaInspiration objects in SQLite
-- Retrieving and verifying data integrity
-- Confirming string-based metadata compatibility
-
-**Note**: The database file (`db.s3db`) is created at the same level as the PrismQ top-level directory to allow multiple PrismQ modules to share the same database. For example:
-```
-VideoMaking/
-  PrismQ/              <- PrismQ top level directory
-    IdeaInspiration/
-      Model/           <- This repository
-  db.s3db              <- Database location (3 levels up from repository)
-```
-
-You can override the database location using the `PRISMQ_DB_PATH` environment variable:
-```bash
-export PRISMQ_DB_PATH=/path/to/your/database.db
-python sqlite_demo.py
+conn.commit()
+conn.close()
 ```
 
 ## Development
