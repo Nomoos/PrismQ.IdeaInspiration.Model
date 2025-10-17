@@ -334,10 +334,25 @@ python sqlite_demo.py
 ```
 
 This demonstrates:
-- Creating a SQLite database schema
+- Creating a SQLite database schema at the PrismQ top level
 - Storing IdeaInspiration objects in SQLite
 - Retrieving and verifying data integrity
 - Confirming string-based metadata compatibility
+
+**Note**: The database file (`db.s3db`) is created at the same level as the PrismQ top-level directory to allow multiple PrismQ modules to share the same database. For example:
+```
+VideoMaking/
+  PrismQ/              <- PrismQ top level directory
+    IdeaInspiration/
+      Model/           <- This repository
+  db.s3db              <- Database location (3 levels up from repository)
+```
+
+You can override the database location using the `PRISMQ_DB_PATH` environment variable:
+```bash
+export PRISMQ_DB_PATH=/path/to/your/database.db
+python sqlite_demo.py
+```
 
 ## Development
 
