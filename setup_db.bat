@@ -99,7 +99,7 @@ echo.
 
 REM Create Python script to set up the database
 echo [INFO] Creating database and IdeaInspiration table...
-%PYTHON_EXEC% -c "import sqlite3; import sys; db_path = r'%DB_PATH%'; conn = sqlite3.connect(db_path); cursor = conn.cursor(); cursor.execute('''CREATE TABLE IF NOT EXISTS IdeaInspiration (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, description TEXT, content TEXT, keywords TEXT, source_type TEXT, metadata TEXT, source_id TEXT, source_url TEXT, score INTEGER, category TEXT, subcategory_relevance TEXT, contextual_category_scores TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)'''); conn.commit(); conn.close(); print('[SUCCESS] Database and IdeaInspiration table created successfully!')"
+%PYTHON_EXEC% -c "import sqlite3; import sys; db_path = r'%DB_PATH%'; conn = sqlite3.connect(db_path); cursor = conn.cursor(); cursor.execute('''CREATE TABLE IF NOT EXISTS IdeaInspiration (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, description TEXT, content TEXT, keywords TEXT, source_type TEXT, metadata TEXT, source_id TEXT, source_url TEXT, source_created_by TEXT, source_created_at TEXT, score INTEGER, category TEXT, subcategory_relevance TEXT, contextual_category_scores TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)'''); conn.commit(); conn.close(); print('[SUCCESS] Database and IdeaInspiration table created successfully!')"
 
 if errorlevel 1 (
     echo.
@@ -126,6 +126,8 @@ echo   - source_type: TEXT (text/video/audio/unknown)
 echo   - metadata: TEXT (JSON object with string key-value pairs)
 echo   - source_id: TEXT
 echo   - source_url: TEXT
+echo   - source_created_by: TEXT
+echo   - source_created_at: TEXT
 echo   - score: INTEGER
 echo   - category: TEXT
 echo   - subcategory_relevance: TEXT (JSON object with int values)

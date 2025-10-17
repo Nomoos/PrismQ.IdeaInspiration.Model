@@ -42,10 +42,12 @@ class IdeaInspiration:
                   SQLite compatibility)
         source_id: Optional unique identifier from the source platform
         source_url: Optional URL to the original content
+        source_created_by: Optional creator/author of the source content
+        source_created_at: Optional creation timestamp of the source content
         score: Optional numerical score value for the content
         category: Optional primary category classification for the content
         subcategory_relevance: Relevance scores for secondary categories/subcategories
-                               (e.g., {'true_crime': 92, 'psychological_thriller': 81, 
+                               (e.g., {'true_crime': 92, 'psychological_thriller': 81,
                                'mystery': 88, 'horror': 75})
         contextual_category_scores: Contextual performance scores as percentages of base
                                     for different contexts (e.g., {'language:english': 145,
@@ -69,6 +71,8 @@ class IdeaInspiration:
     metadata: Dict[str, str] = field(default_factory=dict)
     source_id: Optional[str] = None
     source_url: Optional[str] = None
+    source_created_by: Optional[str] = None
+    source_created_at: Optional[str] = None
     score: Optional[int] = None
     category: Optional[str] = None
     subcategory_relevance: Dict[str, int] = field(default_factory=dict)
@@ -113,6 +117,8 @@ class IdeaInspiration:
             metadata=data.get("metadata", {}),
             source_id=data.get("source_id"),
             source_url=data.get("source_url"),
+            source_created_by=data.get("source_created_by"),
+            source_created_at=data.get("source_created_at"),
             score=data.get("score"),
             category=data.get("category"),
             subcategory_relevance=data.get("subcategory_relevance", {}),
@@ -129,6 +135,8 @@ class IdeaInspiration:
         metadata: Optional[Dict[str, str]] = None,
         source_id: Optional[str] = None,
         source_url: Optional[str] = None,
+        source_created_by: Optional[str] = None,
+        source_created_at: Optional[str] = None,
         score: Optional[int] = None,
         category: Optional[str] = None,
         subcategory_relevance: Optional[Dict[str, int]] = None,
@@ -144,6 +152,8 @@ class IdeaInspiration:
             metadata: Additional metadata (string key-value pairs for SQLite compatibility)
             source_id: Optional source identifier
             source_url: Optional source URL
+            source_created_by: Optional creator/author of the source content
+            source_created_at: Optional creation timestamp of the source content
             score: Optional numerical score value
             category: Optional primary category classification
             subcategory_relevance: Optional relevance scores for subcategories
@@ -161,6 +171,8 @@ class IdeaInspiration:
             metadata=metadata or {},
             source_id=source_id,
             source_url=source_url,
+            source_created_by=source_created_by,
+            source_created_at=source_created_at,
             score=score,
             category=category,
             subcategory_relevance=subcategory_relevance or {},
@@ -177,6 +189,8 @@ class IdeaInspiration:
         metadata: Optional[Dict[str, str]] = None,
         source_id: Optional[str] = None,
         source_url: Optional[str] = None,
+        source_created_by: Optional[str] = None,
+        source_created_at: Optional[str] = None,
         score: Optional[int] = None,
         category: Optional[str] = None,
         subcategory_relevance: Optional[Dict[str, int]] = None,
@@ -193,6 +207,8 @@ class IdeaInspiration:
                       (string key-value pairs, e.g., views="1000", likes="50")
             source_id: Optional video identifier
             source_url: Optional video URL
+            source_created_by: Optional creator/author of the source content
+            source_created_at: Optional creation timestamp of the source content
             score: Optional numerical score value
             category: Optional primary category classification
             subcategory_relevance: Optional relevance scores for subcategories
@@ -210,6 +226,8 @@ class IdeaInspiration:
             metadata=metadata or {},
             source_id=source_id,
             source_url=source_url,
+            source_created_by=source_created_by,
+            source_created_at=source_created_at,
             score=score,
             category=category,
             subcategory_relevance=subcategory_relevance or {},
@@ -226,6 +244,8 @@ class IdeaInspiration:
         metadata: Optional[Dict[str, str]] = None,
         source_id: Optional[str] = None,
         source_url: Optional[str] = None,
+        source_created_by: Optional[str] = None,
+        source_created_at: Optional[str] = None,
         score: Optional[int] = None,
         category: Optional[str] = None,
         subcategory_relevance: Optional[Dict[str, int]] = None,
@@ -242,6 +262,8 @@ class IdeaInspiration:
                       (string key-value pairs, e.g., duration="3600", format="mp3")
             source_id: Optional audio identifier
             source_url: Optional audio URL
+            source_created_by: Optional creator/author of the source content
+            source_created_at: Optional creation timestamp of the source content
             score: Optional numerical score value
             category: Optional primary category classification
             subcategory_relevance: Optional relevance scores for subcategories
@@ -259,6 +281,8 @@ class IdeaInspiration:
             metadata=metadata or {},
             source_id=source_id,
             source_url=source_url,
+            source_created_by=source_created_by,
+            source_created_at=source_created_at,
             score=score,
             category=category,
             subcategory_relevance=subcategory_relevance or {},
