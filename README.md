@@ -348,6 +348,12 @@ VideoMaking/
   prismq_ideas.db      <- Database location (3 levels up from repository)
 ```
 
+You can override the database location using the `PRISMQ_DB_PATH` environment variable:
+```bash
+export PRISMQ_DB_PATH=/path/to/your/database.db
+python sqlite_demo.py
+```
+
 ## Development
 
 ### Setup Development Environment

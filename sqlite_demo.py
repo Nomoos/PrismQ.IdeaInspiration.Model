@@ -18,6 +18,9 @@ def get_database_path():
     top level directory. This allows multiple PrismQ modules to share the
     same database.
     
+    The database location can be overridden using the PRISMQ_DB_PATH
+    environment variable.
+    
     Repository structure:
         VideoMaking/
           PrismQ/                    <- PrismQ top level directory
@@ -26,6 +29,11 @@ def get_database_path():
                 scripts/
           prismq_ideas.db            <- Database location (same level as PrismQ)
     """
+    # Check for environment variable override
+    env_db_path = os.getenv('PRISMQ_DB_PATH')
+    if env_db_path:
+        return Path(env_db_path)
+    
     # Get the current script's directory
     current_dir = Path(__file__).parent.absolute()
     
