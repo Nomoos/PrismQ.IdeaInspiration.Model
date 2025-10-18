@@ -1,6 +1,6 @@
 """Setup configuration for PrismQ.IdeaInspiration.Model package."""
 
-from setuptools import setup, find_namespace_packages
+from setuptools import setup
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
@@ -14,7 +14,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Nomoos/PrismQ.IdeaInspiration.Model",
-    packages=find_namespace_packages(include=['prismq.*']),
+    py_modules=['idea_inspiration'],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
@@ -44,8 +44,6 @@ setup(
             "pytest-cov>=4.0.0",
         ],
     },
-    package_data={
-        "prismq.idea.model": ["py.typed"],
-    },
+    package_data={},
     zip_safe=False,
 )
