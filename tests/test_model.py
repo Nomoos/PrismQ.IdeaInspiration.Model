@@ -1,7 +1,7 @@
 """Tests for IdeaInspiration model."""
 
 import pytest
-from prismq import IdeaInspiration, ContentType
+from model import IdeaInspiration, ContentType
 
 
 class TestIdeaInspirationBasic:

@@ -82,7 +82,7 @@ pip install -e ".[dev]"
 ## Quick Start
 
 ```python
-from prismq import IdeaInspiration, ContentType
+from model import IdeaInspiration, ContentType
 
 # Create from text content
 idea = IdeaInspiration.from_text(
@@ -114,7 +114,7 @@ audio_idea = IdeaInspiration.from_audio(
 ### Basic Creation
 
 ```python
-from prismq import IdeaInspiration, ContentType
+from model import IdeaInspiration, ContentType
 
 # Manual creation
 idea = IdeaInspiration(
@@ -132,7 +132,7 @@ idea = IdeaInspiration(
 ### Serialization
 
 ```python
-from prismq import IdeaInspiration
+from model import IdeaInspiration
 
 # Create an idea
 idea = IdeaInspiration.from_text(
@@ -165,7 +165,7 @@ assert restored.title == idea.title
 The model supports scoring and categorization fields for content evaluation:
 
 ```python
-from prismq import IdeaInspiration
+from model import IdeaInspiration
 
 # Create with scoring and category information
 idea = IdeaInspiration.from_text(
@@ -344,7 +344,7 @@ pytest tests/test_idea_inspiration.py -v
 Once the database is set up, you can use the IdeaInspiration model in your Python code:
 
 ```python
-from prismq import IdeaInspiration, ContentType
+from model import IdeaInspiration, ContentType
 import sqlite3
 import json
 
@@ -427,7 +427,7 @@ mypy prismq/
 The Builder module (PrismQ.IdeaInspiration.Builder) handles platform-specific transformations from various sources (YouTube, Reddit, etc.) into the clean IdeaInspiration model:
 
 ```python
-from prismq import IdeaInspiration
+from model import IdeaInspiration
 from prismq.idea.builder import YouTubeBuilder, RedditBuilder
 
 # Builder transforms YouTube data into clean model
@@ -442,7 +442,7 @@ idea = reddit_builder.build(post_data)
 ### With Scoring Module
 
 ```python
-from prismq import IdeaInspiration
+from model import IdeaInspiration
 from prismq.idea.scoring import ScoringEngine
 
 engine = ScoringEngine()
@@ -456,7 +456,7 @@ score_results = engine.score_idea_inspiration(idea)
 ### With Classification Module
 
 ```python
-from prismq import IdeaInspiration
+from model import IdeaInspiration
 from prismq.idea.classification import TextClassifier
 
 classifier = TextClassifier()

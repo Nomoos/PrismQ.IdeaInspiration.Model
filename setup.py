@@ -14,7 +14,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Nomoos/PrismQ.IdeaInspiration.Model",
-    packages=find_namespace_packages(include=['prismq.*']),
+    packages=['model'],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
@@ -45,7 +45,7 @@ setup(
         ],
     },
     package_data={
-        "prismq.idea.model": ["py.typed"],
+        "model": ["py.typed"],
     },
     zip_safe=False,
 )
