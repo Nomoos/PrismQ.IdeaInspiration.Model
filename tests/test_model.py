@@ -1,7 +1,7 @@
 """Tests for IdeaInspiration model."""
 
 import pytest
-from prismq.model import IdeaInspiration, ContentType
+from prismq import IdeaInspiration, ContentType
 
 
 class TestIdeaInspirationBasic:
@@ -406,8 +406,7 @@ class TestIdeaInspirationScoringFields:
         """Test creating IdeaInspiration with contextual_category_scores field."""
         contextual_category_scores = {"tech": 85, "business": 60, "science": 75}
         idea = IdeaInspiration(
-            title="Test Article",
-            contextual_category_scores=contextual_category_scores
+            title="Test Article", contextual_category_scores=contextual_category_scores
         )
         assert idea.contextual_category_scores == contextual_category_scores
         assert idea.contextual_category_scores["tech"] == 85
@@ -544,18 +543,12 @@ class TestIdeaInspirationNewFields:
 
     def test_create_with_source_created_by(self):
         """Test creating IdeaInspiration with source_created_by field."""
-        idea = IdeaInspiration(
-            title="Test Article",
-            source_created_by="John Doe"
-        )
+        idea = IdeaInspiration(title="Test Article", source_created_by="John Doe")
         assert idea.source_created_by == "John Doe"
 
     def test_create_with_source_created_at(self):
         """Test creating IdeaInspiration with source_created_at field."""
-        idea = IdeaInspiration(
-            title="Test Article",
-            source_created_at="2025-01-15T10:30:00Z"
-        )
+        idea = IdeaInspiration(title="Test Article", source_created_at="2025-01-15T10:30:00Z")
         assert idea.source_created_at == "2025-01-15T10:30:00Z"
 
     def test_default_values_for_new_fields(self):
@@ -570,7 +563,7 @@ class TestIdeaInspirationNewFields:
             title="Article Title",
             text_content="Content",
             source_created_by="Jane Smith",
-            source_created_at="2025-01-15T12:00:00Z"
+            source_created_at="2025-01-15T12:00:00Z",
         )
         assert idea.source_created_by == "Jane Smith"
         assert idea.source_created_at == "2025-01-15T12:00:00Z"
@@ -581,7 +574,7 @@ class TestIdeaInspirationNewFields:
             title="Video Title",
             subtitle_text="Subtitles",
             source_created_by="VideoCreator123",
-            source_created_at="2025-01-14T08:30:00Z"
+            source_created_at="2025-01-14T08:30:00Z",
         )
         assert idea.source_created_by == "VideoCreator123"
         assert idea.source_created_at == "2025-01-14T08:30:00Z"
@@ -592,7 +585,7 @@ class TestIdeaInspirationNewFields:
             title="Podcast Episode",
             transcription="Audio transcription",
             source_created_by="PodcastHost",
-            source_created_at="2025-01-13T15:45:00Z"
+            source_created_at="2025-01-13T15:45:00Z",
         )
         assert idea.source_created_by == "PodcastHost"
         assert idea.source_created_at == "2025-01-13T15:45:00Z"
@@ -602,7 +595,7 @@ class TestIdeaInspirationNewFields:
         idea = IdeaInspiration(
             title="Test Article",
             source_created_by="Author Name",
-            source_created_at="2025-01-15T10:00:00Z"
+            source_created_at="2025-01-15T10:00:00Z",
         )
         data = idea.to_dict()
         assert data["source_created_by"] == "Author Name"
@@ -613,7 +606,7 @@ class TestIdeaInspirationNewFields:
         data = {
             "title": "Test Article",
             "source_created_by": "Test Author",
-            "source_created_at": "2025-01-15T11:30:00Z"
+            "source_created_at": "2025-01-15T11:30:00Z",
         }
         idea = IdeaInspiration.from_dict(data)
         assert idea.source_created_by == "Test Author"
@@ -626,7 +619,7 @@ class TestIdeaInspirationNewFields:
             description="Description",
             content="Content",
             source_created_by="Original Author",
-            source_created_at="2025-01-15T14:20:00Z"
+            source_created_at="2025-01-15T14:20:00Z",
         )
         data = original.to_dict()
         restored = IdeaInspiration.from_dict(data)
