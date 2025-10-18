@@ -1,7 +1,7 @@
 """Tests for IdeaInspiration model."""
 
 import pytest
-from model import IdeaInspiration, ContentType
+from idea_inspiration import IdeaInspiration, ContentType
 
 
 class TestIdeaInspirationBasic:
