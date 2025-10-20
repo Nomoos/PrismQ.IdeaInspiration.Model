@@ -17,33 +17,6 @@ cd "$SCRIPT_DIR"
 # Set default Python executable
 PYTHON_EXEC="python3"
 
-# Check if .env file exists, if not, create it
-if [ ! -f ".env" ]; then
-    echo "[INFO] .env file not found."
-    echo "[INFO] Creating new .env file..."
-    cat > .env << 'EOF'
-# PrismQ Module Configuration
-APP_NAME=PrismQ.IdeaInspiration.Model
-APP_ENV=development
-DEBUG=true
-LOG_LEVEL=INFO
-PYTHON_EXECUTABLE=python3
-EOF
-    echo "[INFO] .env file created with default values."
-    echo ""
-fi
-
-# Read PYTHON_EXECUTABLE from .env if it exists
-if [ -f ".env" ]; then
-    while IFS='=' read -r key value; do
-        if [[ $key == "PYTHON_EXECUTABLE" ]]; then
-            # Remove leading/trailing whitespace
-            PYTHON_EXEC=$(echo "$value" | xargs)
-            break
-        fi
-    done < <(grep "^PYTHON_EXECUTABLE=" .env)
-fi
-
 # Check if Python executable exists
 if ! command -v "$PYTHON_EXEC" &> /dev/null; then
     echo ""
@@ -56,30 +29,20 @@ echo "[INFO] Using Python: $PYTHON_EXEC"
 $PYTHON_EXEC --version
 echo ""
 
-# Get the current working directory
-USER_WORK_DIR="$(pwd)"
-echo "[INFO] Current working directory: $USER_WORK_DIR"
-echo ""
+# Use Python to set up configuration and get working directory
+echo "[INFO] Setting up configuration..."
+USER_WORK_DIR=$($PYTHON_EXEC -c "from config_manager import setup_working_directory; config = setup_working_directory('PrismQ.IdeaInspiration.Model', quiet=True); print(str(config.working_dir))")
 
-# For non-interactive mode (CI), skip confirmation
-if [ -t 0 ]; then
-    # Interactive mode
-    echo "The database will be created in your current working directory."
-    read -p "Create db.s3db in '$USER_WORK_DIR'? (Y/N): " CONFIRM
-    
-    if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
-        echo ""
-        read -p "Enter the full path where you want to create db.s3db: " CUSTOM_DIR
-        USER_WORK_DIR="$CUSTOM_DIR"
-    fi
-else
-    # Non-interactive mode (CI)
-    echo "[INFO] Non-interactive mode detected. Using current directory."
+if [ $? -ne 0 ]; then
+    echo "[ERROR] Failed to set up configuration."
+    exit 1
 fi
+
+echo "[INFO] Working directory: $USER_WORK_DIR"
+echo ""
 
 # Create the database path
 DB_PATH="$USER_WORK_DIR/db.s3db"
-echo ""
 echo "[INFO] Database will be created at: $DB_PATH"
 echo ""
 

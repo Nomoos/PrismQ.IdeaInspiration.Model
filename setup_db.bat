@@ -17,83 +17,29 @@ cd /d "%SCRIPT_DIR%"
 REM Set default Python executable
 set "PYTHON_EXEC=python"
 
-REM Check if .env file exists, if not, create from example
-if not exist ".env" (
-    echo [INFO] .env file not found.
-    if exist ".env.example" (
-        echo [INFO] Creating .env from .env.example...
-        copy ".env.example" ".env" >nul
-        echo [INFO] .env file created.
-    ) else (
-        echo [INFO] Creating new .env file...
-        (
-            echo # PrismQ Module Configuration
-            echo APP_NAME=PrismQ.IdeaInspiration.Model
-            echo APP_ENV=development
-            echo DEBUG=true
-            echo LOG_LEVEL=INFO
-            echo PYTHON_EXECUTABLE=python
-        ) > ".env"
-        echo [INFO] .env file created with default values.
-    )
-    echo.
-)
+REM Use Python to set up configuration and get working directory
+echo [INFO] Setting up configuration...
+for /f "delims=" %%i in ('%PYTHON_EXEC% -c "from config_manager import setup_working_directory; config = setup_working_directory('PrismQ.IdeaInspiration.Model'); print(str(config.working_dir))"') do set "USER_WORK_DIR=%%i"
 
-REM Read PYTHON_EXECUTABLE from .env if it exists
-for /f "tokens=1,2 delims==" %%a in ('findstr /i "^PYTHON_EXECUTABLE=" .env 2^>nul') do (
-    set "PYTHON_EXEC=%%b"
-)
-
-REM Remove any leading/trailing spaces
-set "PYTHON_EXEC=%PYTHON_EXEC: =%"
-
-REM Check if Python executable exists
-%PYTHON_EXEC% --version >nul 2>&1
 if errorlevel 1 (
-    echo.
-    echo [ERROR] Python executable '%PYTHON_EXEC%' not found or not working.
-    echo.
-    set /p "PYTHON_INPUT=Please enter the Python executable path (e.g., python, python3, C:\Python310\python.exe): "
-    
-    REM Update the user's input
-    set "PYTHON_EXEC=!PYTHON_INPUT!"
-    
-    REM Test again
-    !PYTHON_EXEC! --version >nul 2>&1
-    if errorlevel 1 (
-        echo [ERROR] Python executable '!PYTHON_EXEC!' still not working.
-        echo [ERROR] Please install Python 3.8 or higher and try again.
-        pause
-        exit /b 1
-    )
-    
-    REM Update .env with the working Python executable
-    echo [INFO] Updating .env with Python executable: !PYTHON_EXEC!
-    powershell -Command "(Get-Content .env) -replace '^PYTHON_EXECUTABLE=.*', 'PYTHON_EXECUTABLE=!PYTHON_EXEC!' | Set-Content .env"
+    echo [ERROR] Failed to set up configuration.
+    echo [ERROR] Please install Python 3.8 or higher and try again.
+    pause
+    exit /b 1
 )
+
+REM Get Python executable from config
+for /f "delims=" %%i in ('%PYTHON_EXEC% -c "from config_manager import ConfigManager; config = ConfigManager('%USER_WORK_DIR%'); python_exec = config.get('PYTHON_EXECUTABLE', 'python'); print(python_exec)"') do set "PYTHON_EXEC=%%i"
 
 echo [INFO] Using Python: %PYTHON_EXEC%
 %PYTHON_EXEC% --version
 echo.
 
-REM Get the current working directory (where user called the script from)
-set "USER_WORK_DIR=%CD%"
-echo [INFO] Current working directory: %USER_WORK_DIR%
+echo [INFO] Working directory: %USER_WORK_DIR%
 echo.
-
-REM Ask user where to create the database
-echo The database will be created in your current working directory.
-set /p "CONFIRM=Create db.s3db in '%USER_WORK_DIR%'? (Y/N): "
-
-if /i not "%CONFIRM%"=="Y" (
-    echo.
-    set /p "CUSTOM_DIR=Enter the full path where you want to create db.s3db: "
-    set "USER_WORK_DIR=!CUSTOM_DIR!"
-)
 
 REM Create the database path
 set "DB_PATH=%USER_WORK_DIR%\db.s3db"
-echo.
 echo [INFO] Database will be created at: %DB_PATH%
 echo.
 

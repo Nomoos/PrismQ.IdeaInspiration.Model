@@ -39,11 +39,12 @@ setup_db.bat
 ```
 
 This script will:
-- Check for `.env` configuration (creates one if missing)
-- Prompt for Python executable if not configured
-- Create `db.s3db` in your working directory (or custom location)
+- Set up `.env` configuration in your working directory (creates one if missing)
+- Remember your working directory for future use
+- Store configuration values (Python executable, working directory) in `.env`
+- Create `db.s3db` in your configured working directory
 - Create the `IdeaInspiration` table with the complete data model
-- Interactively ask for any missing configuration values
+- Never ask for current directory - uses remembered working directory from `.env`
 
 #### Linux/macOS (CI/Testing)
 
@@ -53,7 +54,16 @@ For CI environments and testing on Linux/macOS:
 ./setup_db.sh
 ```
 
-This script provides the same functionality optimized for non-interactive CI environments. It automatically detects non-interactive mode (pipes/redirects) and skips user prompts.
+This script provides the same functionality optimized for non-interactive CI environments. It automatically detects non-interactive mode (pipes/redirects) and uses sensible defaults.
+
+### Configuration Management
+
+The package includes a configuration manager that:
+- **Remembers your working directory** - Never asks for current directory again
+- **Stores configuration in `.env`** - Creates and manages `.env` file in the nearest parent directory with "PrismQ" in its name
+- **Shared configuration** - All PrismQ packages in the same directory tree share the same `.env` file
+- **Automatic persistence** - Configuration values are saved and restored automatically
+- **Interactive and non-interactive modes** - Works in both CI environments and manual usage
 
 #### Database Fields
 
@@ -339,6 +349,50 @@ pytest --cov=prismq --cov-report=html
 pytest tests/test_idea_inspiration.py -v
 ```
 
+## Configuration Manager
+
+The package includes a `ConfigManager` class for handling `.env` file configuration:
+
+```python
+from config_manager import ConfigManager, setup_working_directory
+
+# Set up working directory configuration (prompts if needed)
+config = setup_working_directory("MyApp")
+
+# Get configuration values
+working_dir = config.get('WORKING_DIR')
+python_exec = config.get('PYTHON_EXECUTABLE', 'python')
+
+# Set configuration values (automatically saves to .env)
+config.set('DATABASE_PATH', '/path/to/db.s3db')
+
+# Update multiple values at once
+config.update({
+    'API_KEY': 'your-api-key',
+    'LOG_LEVEL': 'INFO'
+})
+
+# Check if configuration exists
+if config.has('API_KEY'):
+    api_key = config.get('API_KEY')
+
+# Prompt user for missing configuration
+db_path = config.prompt_if_missing(
+    'DATABASE_PATH',
+    'Enter database path',
+    default='db.s3db'
+)
+```
+
+### Key Features
+
+- **Automatic `.env` creation** - Creates `.env` file if it doesn't exist
+- **Persistent configuration** - All values saved to `.env` file automatically
+- **Working directory management** - Stores and retrieves working directory location
+- **Interactive prompts** - Can prompt users for missing configuration values
+- **Non-interactive support** - Works in CI/CD environments without prompts
+- **Type-safe** - Full type hints for IDE support
+
 ## Usage in Python Code
 
 Once the database is set up, you can use the IdeaInspiration model in your Python code:
@@ -471,13 +525,12 @@ result = classifier.classify(idea)
 
 ```
 PrismQ.IdeaInspiration.Model/
-├── prismq/
-│   └── model/
-│       ├── __init__.py                  # Package exports
-│       └── idea_inspiration.py          # Core model
+├── idea_inspiration.py                  # Core IdeaInspiration model
+├── config_manager.py                    # Configuration and .env management
 ├── tests/
 │   ├── __init__.py
-│   └── test_model.py                    # Comprehensive tests
+│   ├── test_model.py                    # Model tests
+│   └── test_config_manager.py           # Configuration tests
 ├── setup_db.bat                         # Database setup (Windows)
 ├── setup_db.sh                          # Database setup (Linux/CI)
 ├── .gitignore
@@ -498,6 +551,8 @@ PrismQ.IdeaInspiration.Model/
 6. **Well Documented** - Clear documentation and examples
 7. **Well Tested** - Comprehensive test coverage
 8. **Single Responsibility** - Each class and method has one clear purpose
+9. **Configuration Management** - Persistent configuration via `.env` files
+10. **SOLID Principles** - Adheres to SOLID design patterns (SRP, OCP, LSP, ISP, DIP)
 
 ## Version History
 
