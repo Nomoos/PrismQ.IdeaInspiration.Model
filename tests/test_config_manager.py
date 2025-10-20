@@ -308,5 +308,101 @@ class TestConfigManagerEdgeCases:
             assert config2.get('UNICODE_KEY') == unicode_value
 
 
+class TestFindPrismQDirectory:
+    """Test find_prismq_directory function."""
+
+    def test_finds_current_directory_with_prismq(self):
+        """Test finding PrismQ in current directory name."""
+        from config_manager import find_prismq_directory
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Create a directory with PrismQ in the name
+            prismq_dir = Path(tmpdir) / "PrismQ.Test.Package"
+            prismq_dir.mkdir()
+            
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(str(prismq_dir))
+                result = find_prismq_directory()
+                assert result == prismq_dir
+            finally:
+                os.chdir(original_cwd)
+
+    def test_finds_parent_directory_with_prismq(self):
+        """Test finding PrismQ in parent directory name."""
+        from config_manager import find_prismq_directory
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Create a directory structure with PrismQ in parent
+            prismq_dir = Path(tmpdir) / "PrismQ.Module"
+            prismq_dir.mkdir()
+            sub_dir = prismq_dir / "subdir" / "nested"
+            sub_dir.mkdir(parents=True)
+            
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(str(sub_dir))
+                result = find_prismq_directory()
+                assert result == prismq_dir
+            finally:
+                os.chdir(original_cwd)
+
+    def test_case_insensitive_search(self):
+        """Test that search is case-insensitive."""
+        from config_manager import find_prismq_directory
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Create directory with lowercase prismq
+            prismq_dir = Path(tmpdir) / "prismq.test"
+            prismq_dir.mkdir()
+            
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(str(prismq_dir))
+                result = find_prismq_directory()
+                assert result == prismq_dir
+            finally:
+                os.chdir(original_cwd)
+
+    def test_returns_none_when_not_found(self):
+        """Test returns None when no PrismQ directory found."""
+        from config_manager import find_prismq_directory
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            test_dir = Path(tmpdir) / "regular" / "directory"
+            test_dir.mkdir(parents=True)
+            
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(str(test_dir))
+                result = find_prismq_directory()
+                # Should return None since no PrismQ directory in path
+                assert result is None
+            finally:
+                os.chdir(original_cwd)
+
+    def test_finds_nearest_prismq_directory(self):
+        """Test finds the nearest (not the farthest) PrismQ directory."""
+        from config_manager import find_prismq_directory
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Create nested PrismQ directories
+            outer_prismq = Path(tmpdir) / "PrismQ.Outer"
+            outer_prismq.mkdir()
+            inner_prismq = outer_prismq / "nested" / "PrismQ.Inner"
+            inner_prismq.mkdir(parents=True)
+            sub_dir = inner_prismq / "subdirectory"
+            sub_dir.mkdir()
+            
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(str(sub_dir))
+                result = find_prismq_directory()
+                # Should find the nearest one (inner)
+                assert result == inner_prismq
+            finally:
+                os.chdir(original_cwd)
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

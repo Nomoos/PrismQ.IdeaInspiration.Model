@@ -60,8 +60,8 @@ This script provides the same functionality optimized for non-interactive CI env
 
 The package includes a configuration manager that:
 - **Remembers your working directory** - Never asks for current directory again
-- **Stores configuration in `.env`** - Creates and manages `.env` file in your working directory
-- **Per-package configuration** - Each PrismQ package maintains its own settings
+- **Stores configuration in `.env`** - Creates and manages `.env` file in the nearest parent directory with "PrismQ" in its name
+- **Shared configuration** - All PrismQ packages in the same directory tree share the same `.env` file
 - **Automatic persistence** - Configuration values are saved and restored automatically
 - **Interactive and non-interactive modes** - Works in both CI environments and manual usage
 

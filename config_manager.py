@@ -170,8 +170,36 @@ class ConfigManager:
         return user_input
 
 
+def find_prismq_directory() -> Optional[Path]:
+    """Find the nearest parent directory with 'PrismQ' in its name.
+    
+    Walks up the directory tree from current directory to find a directory
+    whose name contains 'PrismQ' (case-insensitive).
+    
+    Returns:
+        Path to the nearest PrismQ directory or None if not found
+    """
+    current = Path.cwd().resolve()
+    
+    # Check current directory first
+    if 'prismq' in current.name.lower():
+        return current
+    
+    # Walk up the directory tree
+    for parent in current.parents:
+        if 'prismq' in parent.name.lower():
+            return parent
+    
+    return None
+
+
 def get_working_directory_from_env() -> Optional[str]:
     """Get the working directory from environment or config.
+    
+    Checks in order:
+    1. PRISMQ_WORKING_DIR environment variable
+    2. .env file in nearest PrismQ directory
+    3. .env file in current directory
     
     Returns:
         Working directory path or None if not configured
@@ -181,7 +209,17 @@ def get_working_directory_from_env() -> Optional[str]:
     if work_dir:
         return work_dir
     
-    # Check for .env in current directory
+    # Check for .env in nearest PrismQ directory
+    prismq_dir = find_prismq_directory()
+    if prismq_dir:
+        env_file = prismq_dir / ".env"
+        if env_file.exists():
+            config = ConfigManager(str(prismq_dir))
+            work_dir = config.get('WORKING_DIR')
+            if work_dir:
+                return work_dir
+    
+    # Fallback: Check for .env in current directory
     env_file = Path.cwd() / ".env"
     if env_file.exists():
         config = ConfigManager()
@@ -198,8 +236,12 @@ def setup_working_directory(package_name: str = "PrismQ.IdeaInspiration.Model",
     
     This function ensures that:
     1. Working directory is configured (asks user if not set)
-    2. .env file exists in working directory
+    2. .env file exists in nearest PrismQ directory (or working directory if not found)
     3. Package configuration is saved
+    
+    The .env file is stored in the nearest parent directory with 'PrismQ' in its name,
+    allowing configuration to be shared across all PrismQ modules in that directory tree.
+    If PRISMQ_WORKING_DIR environment variable is set, the .env is stored there instead.
     
     Args:
         package_name: Name of the package
@@ -233,8 +275,23 @@ def setup_working_directory(package_name: str = "PrismQ.IdeaInspiration.Model",
             if not quiet:
                 print(f"[INFO] Using current directory as working directory: {work_dir}", file=sys.stderr)
     
-    # Create config manager for working directory
-    config = ConfigManager(work_dir)
+    # Determine where to store the .env file
+    # Priority: PRISMQ_WORKING_DIR env var > nearest PrismQ directory > working directory
+    env_location = None
+    if os.environ.get('PRISMQ_WORKING_DIR'):
+        # If environment variable is set, use that location for .env
+        env_location = os.environ.get('PRISMQ_WORKING_DIR')
+    else:
+        # Find the nearest PrismQ directory to store .env file
+        prismq_dir = find_prismq_directory()
+        if prismq_dir:
+            env_location = str(prismq_dir)
+        else:
+            # Fallback to working directory if no PrismQ directory found
+            env_location = work_dir
+    
+    # Create config manager for the .env file location
+    config = ConfigManager(env_location)
     
     # Ensure .env exists
     config.ensure_exists()
@@ -244,6 +301,6 @@ def setup_working_directory(package_name: str = "PrismQ.IdeaInspiration.Model",
         config.set('APP_NAME', package_name)
     
     if not config.has('WORKING_DIR'):
-        config.set('WORKING_DIR', str(config.working_dir))
+        config.set('WORKING_DIR', work_dir)
     
     return config

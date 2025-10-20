@@ -4,12 +4,15 @@
 
 The PrismQ.IdeaInspiration.Model package includes a robust configuration manager that handles `.env` file operations, ensuring that working directory and other configuration values are persisted and never need to be re-entered.
 
+**Important**: The `.env` file is automatically stored in the nearest parent directory with "PrismQ" in its name. This allows all PrismQ packages in the same directory tree to share the same configuration, providing a unified setup experience across the PrismQ ecosystem.
+
 ## Key Features
 
 ### 1. Working Directory Persistence
 - **Never asks for current directory again** - Once configured, the working directory is stored in `.env`
-- **Automatic detection** - Checks environment variables and existing `.env` files
-- **Per-package configuration** - Each PrismQ module can maintain its own settings
+- **Automatic detection** - Checks environment variables and existing `.env` files in PrismQ directories
+- **Shared configuration** - All PrismQ modules in the same directory tree share the same `.env` file
+- **Smart location** - `.env` file is stored in the nearest parent directory with "PrismQ" in its name
 
 ### 2. Configuration Storage
 - **`.env` file management** - Automatic creation and updating of configuration files
@@ -81,6 +84,46 @@ Both scripts will:
 3. Store configuration values for future use
 4. Remember Python executable and working directory
 
+## .env File Location
+
+The configuration manager intelligently locates the `.env` file using the following priority:
+
+1. **PRISMQ_WORKING_DIR environment variable** - If set, `.env` is stored at this location
+2. **Nearest PrismQ directory** - Searches up the directory tree for a directory with "PrismQ" in its name (case-insensitive)
+3. **Working directory** - Falls back to the configured working directory
+
+### Examples
+
+**Example 1: Standard PrismQ project structure**
+```
+/projects/
+  └── PrismQ.IdeaInspiration.Model/    ← .env stored here
+      ├── .env
+      ├── config_manager.py
+      ├── idea_inspiration.py
+      └── tests/
+```
+
+**Example 2: Nested PrismQ structure**
+```
+/projects/
+  └── PrismQ.Ecosystem/                 ← .env stored here
+      ├── .env
+      ├── PrismQ.IdeaInspiration.Model/
+      ├── PrismQ.IdeaInspiration.Scoring/
+      └── PrismQ.IdeaInspiration.Classification/
+```
+All three packages share the same `.env` file in `PrismQ.Ecosystem/`.
+
+**Example 3: No PrismQ directory**
+```
+/projects/
+  └── my-project/                       ← .env stored here
+      ├── .env
+      └── app.py
+```
+Falls back to the working directory.
+
 ## Configuration File Format
 
 The `.env` file uses a simple key=value format:
@@ -130,13 +173,27 @@ Prompt user for a configuration value if not set (interactive mode only).
 
 ### Module Functions
 
+#### `find_prismq_directory() -> Optional[Path]`
+Find the nearest parent directory with 'PrismQ' in its name (case-insensitive).
+Walks up the directory tree from the current directory to find a directory whose name contains 'PrismQ'.
+
+Returns:
+- Path to the nearest PrismQ directory or None if not found
+
 #### `get_working_directory_from_env() -> Optional[str]`
 Get the working directory from environment variable or `.env` file.
+Checks in order:
+1. PRISMQ_WORKING_DIR environment variable
+2. .env file in nearest PrismQ directory
+3. .env file in current directory
 
 #### `setup_working_directory(package_name: str, quiet: bool = False) -> ConfigManager`
 Set up working directory configuration for a package.
 - `package_name`: Name of the package
 - `quiet`: If True, suppress informational messages (for scripting)
+
+The .env file is stored in the nearest parent directory with 'PrismQ' in its name,
+allowing configuration to be shared across all PrismQ modules in that directory tree.
 
 ## Environment Variables
 
@@ -201,8 +258,9 @@ This example demonstrates:
 ## Troubleshooting
 
 ### .env file not found
-- The `.env` file is created automatically in your working directory
-- Check that you have write permissions in the working directory
+- The `.env` file is created automatically in the nearest parent directory with "PrismQ" in its name
+- If no PrismQ directory is found, it falls back to the working directory
+- Check that you have write permissions in the target directory
 - Use `config.ensure_exists()` to force creation
 
 ### Configuration not persisting
